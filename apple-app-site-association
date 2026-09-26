@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["L5684PC5PV.sa.nabta.ios"],
+        "components": [{ "/": "/join/*", "comment": "Nursery join links" }]
+      }
+    ]
+  }
+}

@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>نبتة · Nabta — الانضمام للحضانة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#F6F1E9; --card:#FFFDF9; --ink:#2B2A33; --ink2:#5E5A68; --line:#E8E0D2; --sage:#3F6B55; --sageL:#DDEBE2; --chip:#E9E2D5; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1E1C1A; --card:#2A2724; --ink:#F2EEE8; --ink2:#C9C2B8; --line:#3A3530; --sage:#8DB9A0; --sageL:#27352D; --chip:#3A3530; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans Arabic","IBM Plex Sans",-apple-system,Tahoma,sans-serif; line-height:1.8; }
+  main { max-width:520px; margin:0 auto; padding:24px 16px 56px; }
+  .top { display:flex; justify-content:flex-end; }
+  .switch { display:inline-flex; background:var(--chip); border-radius:999px; padding:4px; gap:4px; }
+  .switch button { border:0; background:transparent; color:var(--ink2); font:600 14px inherit; font-family:inherit; padding:6px 16px; border-radius:999px; cursor:pointer; }
+  .switch button[aria-pressed="true"] { background:var(--card); color:var(--ink); }
+  .leaf { font-size:56px; text-align:center; margin-top:18px; }
+  h1 { text-align:center; font-size:28px; margin:6px 0 2px; }
+  .sub { text-align:center; color:var(--ink2); margin:0 0 18px; }
+  .card { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:18px; margin-top:14px; }
+  .code { font:700 30px ui-monospace,SFMono-Regular,Menlo,monospace; letter-spacing:3px; text-align:center; direction:ltr; margin:6px 0; }
+  .btn { display:block; width:100%; text-align:center; text-decoration:none; font-weight:600; font-size:17px; border-radius:18px; padding:15px; margin-top:12px; border:0; cursor:pointer; font-family:inherit; }
+  .primary { background:var(--ink); color:var(--bg); }
+  .secondary { background:transparent; color:var(--ink); border:1.5px solid var(--line); }
+  ol { padding-inline-start:22px; color:var(--ink2); margin:8px 0 0; }
+  .muted { color:var(--ink2); font-size:14px; }
+  .error { color:#B3472F; font-weight:600; text-align:center; }
+  .js [data-lang]:not(.active) { display:none; }
+</style>
+<script>
+  document.documentElement.classList.add('js');
+  const SUPABASE = 'https://ocwyhcfdxelktrxmougx.supabase.co';
+  const KEY = 'sb_publishable_Fv4L57e9GHyfHW29NDIIsg_-PU4gIHo';   // public key; the lookup returns only the school's name
+  const APP_STORE = '';                                             // App Store link once the app is live
+  const params = new URLSearchParams(location.search);
+  const raw = (params.get('c') || '').toUpperCase().replace(/[^A-Z0-9]/g, '');
+  const code = raw.length === 8 ? raw.slice(0, 4) + '-' + raw.slice(4) : '';
+
+  function pickLanguage() {
+    const q = params.get('lang');
+    if (q === 'en' || q === 'ar') return q;
+    try { const s = localStorage.getItem('nabta-lang'); if (s === 'ar' || s === 'en') return s; } catch (e) {}
+    return (navigator.language || 'ar').toLowerCase().startsWith('ar') ? 'ar' : 'en';
+  }
+  function setLanguage(lang, remember) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('[data-lang]').forEach(e => e.classList.toggle('active', e.dataset.lang === lang));
+    document.querySelectorAll('.switch button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.set === lang)));
+    if (remember) { try { localStorage.setItem('nabta-lang', lang); } catch (e) {} }
+  }
+  addEventListener('DOMContentLoaded', async () => {
+    setLanguage(pickLanguage(), false);
+    document.querySelectorAll('.switch button').forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.set, true)));
+    document.querySelectorAll('.code').forEach(e => e.textContent = code || '—');
+    document.querySelectorAll('.open-app').forEach(a => a.href = 'nabta://join?school=' + encodeURIComponent(code));
+    document.querySelectorAll('.store').forEach(a => { if (APP_STORE) a.href = APP_STORE; else a.remove(); });
+    document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', async () => {
+      try { await navigator.clipboard.writeText(code); b.dataset.done = '1'; b.textContent = b.dataset.copied; } catch (e) {}
+    }));
+    if (!code) { document.querySelectorAll('.bad').forEach(e => e.hidden = false); return; }
+    try {
+      const r = await fetch(SUPABASE + '/rest/v1/rpc/kg_school_by_code', {
+        method: 'POST', headers: { apikey: KEY, 'Content-Type': 'application/json' }, body: JSON.stringify({ p_code: code })
+      });
+      const rows = await r.json();
+      if (Array.isArray(rows) && rows.length) {
+        document.querySelectorAll('.school').forEach(e => e.textContent = rows[0].school_name);
+      } else {
+        document.querySelectorAll('.bad').forEach(e => e.hidden = false);
+      }
+    } catch (e) { /* offline: the code still works in the app */ }
+  });
+</script>
+</head>
+<body>
+<main>
+  <div class="top"><div class="switch" role="group" aria-label="Language / اللغة">
+    <button type="button" data-set="ar" aria-pressed="true">العربية</button><button type="button" data-set="en" aria-pressed="false">English</button>
+  </div></div>
+  <div class="leaf" aria-hidden="true">🌱</div>
+
+  <section data-lang="ar" class="active" lang="ar" dir="rtl">
+    <h1 class="school">حضانتك على نبتة</h1>
+    <p class="sub">تابع يوم طفلك: الحضور، اللحظات، الإعلانات والرسائل.</p>
+    <p class="error bad" hidden>الرابط غير صحيح أو تغيّر. اطلب الرابط الجديد من الحضانة.</p>
+    <a class="btn primary open-app" href="#">افتح في تطبيق نبتة</a>
+    <a class="btn secondary store" href="#">حمّل نبتة من App Store</a>
+    <div class="card">
+      <strong>بعد تحميل التطبيق</strong>
+      <ol>
+        <li>افتح نبتة واختر «إدخال رمز الحضانة»</li>
+        <li>اكتب هذا الرمز:</li>
+      </ol>
+      <div class="code">—</div>
+      <button class="btn secondary copy" data-copied="تم النسخ ✓">نسخ الرمز</button>
+      <ol start="3"><li>أدخل رقم جوالك المسجّل عند الحضانة، ثم رمز التحقق.</li></ol>
+    </div>
+    <p class="muted">الرابط يعرّف الحضانة فقط. بيانات الأطفال تظهر لأولياء أمورهم بعد التحقق من رقم الجوال. <a href="/privacy/?lang=ar">سياسة الخصوصية</a></p>
+  </section>
+
+  <section data-lang="en" lang="en" dir="ltr">
+    <h1 class="school">Your nursery on Nabta</h1>
+    <p class="sub">Follow your child's day: attendance, moments, announcements and messages.</p>
+    <p class="error bad" hidden>This link is invalid or has changed. Ask the nursery for the new one.</p>
+    <a class="btn primary open-app" href="#">Open in the Nabta app</a>
+    <a class="btn secondary store" href="#">Get Nabta on the App Store</a>
+    <div class="card">
+      <strong>After installing the app</strong>
+      <ol>
+        <li>Open Nabta and choose "Enter nursery code"</li>
+        <li>Type this code:</li>
+      </ol>
+      <div class="code">—</div>
+      <button class="btn secondary copy" data-copied="Copied ✓">Copy code</button>
+      <ol start="3"><li>Enter the mobile number registered with the nursery, then the verification code.</li></ol>
+    </div>
+    <p class="muted">The link only identifies the nursery. Children's details are shown to their guardians after their mobile number is verified. <a href="/privacy/?lang=en">Privacy Policy</a></p>
+  </section>
+</main>
+</body>
+</html>
