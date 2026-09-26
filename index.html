@@ -3,100 +3,266 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>نبتة · سياسة الخصوصية والدعم</title>
+<title>نبتة · Nabta — الخصوصية والشروط والدعم · Privacy, Terms & Support</title>
+<meta name="description" content="سياسة الخصوصية وشروط الاستخدام والدعم لتطبيق نبتة · Privacy policy, terms of use and support for the Nabta app.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg:#F6F1E9; --card:#FFFDF9; --ink:#2B2A33; --ink2:#5E5A68; --line:#E8E0D2; --sage:#3F6B55; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#1E1C1A; --card:#2A2724; --ink:#F2EEE8; --ink2:#C9C2B8; --line:#3A3530; --sage:#8DB9A0; } }
+  :root { --bg:#F6F1E9; --card:#FFFDF9; --ink:#2B2A33; --ink2:#5E5A68; --line:#E8E0D2; --sage:#3F6B55; --chip:#E9E2D5; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#1E1C1A; --card:#2A2724; --ink:#F2EEE8; --ink2:#C9C2B8; --line:#3A3530; --sage:#8DB9A0; --chip:#3A3530; } }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans Arabic", -apple-system, Tahoma, sans-serif; line-height:1.9; }
-  main { max-width:760px; margin:0 auto; padding:32px 16px 64px; }
-  header { display:flex; align-items:center; gap:12px; margin-bottom:8px; }
+  body { margin:0; background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans Arabic", "IBM Plex Sans", -apple-system, Tahoma, sans-serif; line-height:1.9; }
+  .doc[lang="en"] { font-family:"IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; line-height:1.7; }
+  main { max-width:760px; margin:0 auto; padding:24px 16px 64px; }
+  .top { display:flex; justify-content:flex-end; }
+  .switch { display:inline-flex; background:var(--chip); border-radius:999px; padding:4px; gap:4px; }
+  .switch button { border:0; background:transparent; color:var(--ink2); font:600 14px "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif; padding:6px 16px; border-radius:999px; cursor:pointer; }
+  .switch button[aria-pressed="true"] { background:var(--card); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  header { display:flex; align-items:center; gap:12px; margin:8px 0; }
   header span { font-size:40px; }
   h1 { font-size:34px; margin:0; }
-  h2 { font-size:21px; margin:32px 0 6px; color:var(--sage); }
+  h2 { font-size:21px; margin:28px 0 6px; color:var(--sage); }
+  h3 { font-size:17px; margin:22px 0 4px; color:var(--ink); }
   section { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:8px 22px 18px; margin-top:18px; }
   p, li { color:var(--ink2); font-size:16px; }
+  li { margin-bottom:6px; }
   a { color:var(--sage); }
   .muted { font-size:14px; color:var(--ink2); }
-  nav a { margin-inline-end:16px; font-weight:600; }
+  nav { display:flex; flex-wrap:wrap; gap:6px 16px; }
+  nav a { font-weight:600; }
+  /* With JavaScript only the chosen language shows; without it both are readable one after the other. */
+  .js .doc:not(.active) { display:none; }
 </style>
 <script>
-  // /privacy, /terms, /support open the page at their section.
-  const part = location.pathname.split('/').filter(Boolean).pop();
-  if (['privacy','terms','support'].includes(part) && !location.hash) {
-    addEventListener('DOMContentLoaded', () => document.getElementById(part)?.scrollIntoView());
+  document.documentElement.classList.add('js');
+  function pickLanguage() {
+    const q = new URLSearchParams(location.search).get('lang');
+    if (q === 'en' || q === 'ar') return q;
+    if (/-en$/.test(location.hash)) return 'en';
+    try { const saved = localStorage.getItem('nabta-lang'); if (saved === 'ar' || saved === 'en') return saved; } catch (e) {}
+    return (navigator.language || 'ar').toLowerCase().startsWith('ar') ? 'ar' : 'en';
   }
+  function setLanguage(lang, remember) {
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
+    document.querySelectorAll('.doc').forEach(d => d.classList.toggle('active', d.lang === lang));
+    document.querySelectorAll('.switch button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
+    if (remember) { try { localStorage.setItem('nabta-lang', lang); } catch (e) {} }
+  }
+  addEventListener('DOMContentLoaded', () => {
+    const lang = pickLanguage();
+    setLanguage(lang, false);
+    document.querySelectorAll('.switch button').forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang, true)));
+    // /privacy, /terms and /support open the page at their section.
+    const part = location.pathname.split('/').filter(Boolean).pop();
+    if (['privacy','terms','support'].includes(part) && !location.hash) {
+      document.getElementById(lang === 'en' ? part + '-en' : part)?.scrollIntoView();
+    }
+  });
 </script>
 </head>
 <body>
 <main>
-  <header><span>🌱</span><h1>نَبتة</h1></header>
-  <p>تطبيق يربط الحضانة بالأسرة: يوم الطفل، الحضور، اللحظات، الفعاليات، والرسائل.</p>
-  <nav><a href="#privacy">سياسة الخصوصية</a><a href="#terms">شروط الاستخدام</a><a href="#support">الدعم</a><a href="#en">English</a></nav>
+  <div class="top">
+    <div class="switch" role="group" aria-label="Language / اللغة">
+      <button type="button" data-lang="ar" aria-pressed="true">العربية</button>
+      <button type="button" data-lang="en" aria-pressed="false">English</button>
+    </div>
+  </div>
 
-  <section id="privacy">
-    <h2>سياسة الخصوصية</h2>
-    <p class="muted">آخر تحديث: ٢٥ سبتمبر ٢٠٢٦</p>
-    <p>نبتة تُستخدم من الحضانات لمشاركة يوم الأطفال مع أسرهم. الحضانة هي صاحبة البيانات وهي من يقرر من ينضم، ونحن نشغّل التطبيق نيابةً عنها.</p>
-    <h2>البيانات التي نجمعها</h2>
-    <ul>
-      <li><b>الحساب:</b> البريد الإلكتروني والاسم الذي تظهر به للحضانة، وكلمة مرور مشفّرة (أو تسجيل الدخول عبر Apple).</li>
-      <li><b>بيانات الطفل:</b> الاسم والفصل، وما تسجّله الحضانة من حضور وانصراف وتحديثات يومية وتقارير نمو، وما تضيفه الأسرة من ملاحظات صحية وتاريخ ميلاد ورقم طوارئ والأشخاص المفوّضين بالاستلام.</li>
-      <li><b>المحتوى:</b> الصور والفيديو التي تنشرها المعلمات، والرسائل والتعليقات والإعجابات.</li>
-      <li><b>بيانات التسجيل الجماعي:</b> عند استيراد الحضانة لملف الأطفال قد تُحفظ بيانات تواصل أولياء الأمور (البريد والجوال) للتحقق عند الانضمام.</li>
-    </ul>
-    <h2>كيف نستخدمها</h2>
-    <ul>
-      <li>لتشغيل التطبيق فقط: عرض يوم طفلك لك، وتمكين الحضانة من التواصل معك.</li>
-      <li>لا نبيع البيانات، ولا نستخدمها للإعلانات أو التتبع، ولا نشاركها مع أي طرف لأغراض تسويقية.</li>
-    </ul>
-    <h2>من يرى ماذا</h2>
-    <ul>
-      <li>ولي الأمر يرى أطفاله فقط. المعلمة ترى أطفال فصولها فقط. إدارة الحضانة ترى حضانتها فقط.</li>
-      <li>الصور والفيديو خاصة بأسر الفصل (أو الحضانة عند نشرها للجميع)، وتُعرض بروابط مؤقتة.</li>
-      <li>هذه القيود مطبّقة في قاعدة البيانات نفسها، لا في التطبيق فقط.</li>
-    </ul>
-    <h2>التخزين والحماية</h2>
-    <p>تُحفظ البيانات لدى مزوّد الخدمة Supabase مع تشفير الاتصال (HTTPS) وتشفير البيانات المخزنة. رسائل البريد (مثل الدعوات) تُرسل عبر مزوّد بريد مخصص.</p>
-    <h2>حذف البيانات</h2>
-    <p>تقدر تحذف حسابك في أي وقت من التطبيق: المزيد ← الحساب ← حذف الحساب. يُحذف حسابك وبياناتك الشخصية فورًا، وتبقى المنشورات والرسائل السابقة لدى الحضانة باسم «حساب محذوف». لحذف بيانات طفل كاملة تواصل مع حضانتك أو معنا.</p>
-    <h2>الأطفال</h2>
-    <p>التطبيق موجّه للبالغين (أولياء الأمور وطاقم الحضانة). الأطفال لا يستخدمون التطبيق ولا ينشئون حسابات.</p>
-    <h2>التواصل</h2>
-    <p>لأي سؤال عن الخصوصية: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-  </section>
+  <!-- ============================== العربية ============================== -->
+  <div class="doc active" lang="ar" dir="rtl">
+    <header><span>🌱</span><h1>نَبتة</h1></header>
+    <p>تطبيق يربط الحضانة بالأسرة: يوم الطفل، الحضور، اللحظات، الفعاليات، الإعلانات، الرسوم، والرسائل.</p>
+    <nav><a href="#privacy">سياسة الخصوصية</a><a href="#terms">شروط الاستخدام</a><a href="#support">الدعم</a></nav>
 
-  <section id="terms">
-    <h2>شروط الاستخدام</h2>
-    <ul>
-      <li>نبتة مساحة خاصة بين الحضانة وأسر أطفالها. باستخدامك التطبيق توافق على احترام خصوصية الأطفال والأسر والطاقم.</li>
-      <li><b>لا تسامح مع المحتوى المسيء:</b> يُمنع نشر أي محتوى مسيء أو غير لائق أو مزعج، أو أي إساءة أو تنمّر، أو مشاركة صور الأطفال خارج التطبيق دون إذن أسرهم.</li>
-      <li>تقدر تبلّغ عن أي تعليق أو رسالة أو منشور بالضغط المطوّل عليه واختيار «إبلاغ»، أو تحظر كاتبه. تراجع إدارة الحضانة البلاغات وتحذف المحتوى المخالف وتزيل أصحابه خلال ٢٤ ساعة.</li>
-      <li>الحضانة مسؤولة عن قبول الأعضاء وعن المحتوى الذي ينشره طاقمها، ولها إزالة أي عضو يخالف هذه الشروط.</li>
-      <li>التطبيق مقدّم «كما هو»، ونعمل على توفره وحماية بياناته قدر الإمكان.</li>
-    </ul>
-  </section>
+    <section id="privacy">
+      <h2>سياسة الخصوصية</h2>
+      <p class="muted">آخر تحديث: ٢٦ سبتمبر ٢٠٢٦</p>
+      <p>تستخدم الحضانات تطبيق نبتة لمشاركة يوم الأطفال مع أسرهم. الحضانة هي صاحبة البيانات، وهي من يقرر من ينضم إليها، ونحن نشغّل التطبيق نيابةً عنها. توضّح هذه السياسة البيانات التي نجمعها وكيف نستخدمها ونحميها، وما هي حقوقك.</p>
 
-  <section id="support">
-    <h2>الدعم</h2>
-    <ul>
-      <li><b>كيف أنضم لحضانتي؟</b> حمّل التطبيق، اختر «عندي دعوة» واكتب رمز الدعوة (من بريدك) أو رمز الفصل (من قروب الفصل).</li>
-      <li><b>طلبي بانتظار الموافقة:</b> إذا انضممت برمز الفصل وبريدك غير مسجّل عند الحضانة، تراجع المعلمة طلبك وتوافق عليه.</li>
-      <li><b>نسيت كلمة المرور:</b> من شاشة الدخول اضغط «نسيت كلمة المرور؟».</li>
-      <li><b>للحضانات:</b> من «إدارة الحضانة» تقدر تستورد الأطفال من Excel وترسل رموز الفصول.</li>
-    </ul>
-    <p>راسلنا: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-  </section>
+      <h3>١. البيانات التي نجمعها</h3>
+      <ul>
+        <li><b>بيانات الحساب:</b> رقم الجوال (عند الدخول برمز SMS)، أو البريد الإلكتروني (عند الدخول بالبريد أو عبر Apple أو Google)، والاسم الذي تظهر به داخل الحضانة. عند الدخول بالبريد تُحفظ كلمة المرور مشفّرة، ولا نطّلع عليها.</li>
+        <li><b>بيانات الطفل:</b> الاسم والفصل، وما تسجّله الحضانة من حضور وانصراف وتحديثات يومية (وجبات، نوم، نشاط) وتقارير نمو، وما تضيفه الأسرة من ملاحظات صحية وتاريخ ميلاد ورقم طوارئ وأسماء المفوّضين بالاستلام.</li>
+        <li><b>المحتوى:</b> الصور والفيديو والإعلانات وملفات PDF المرفقة التي ينشرها طاقم الحضانة، والرسائل والتعليقات والإعجابات والردود على الفعاليات.</li>
+        <li><b>بيانات الرسوم:</b> المبالغ المستحقة على كل طفل والدفعات المسجّلة وأرقام السندات، كما تُدخلها إدارة الحضانة. لا نجمع أي بيانات بطاقات أو حسابات بنكية، ولا تتم أي عملية دفع داخل التطبيق.</li>
+        <li><b>بيانات التسجيل الجماعي:</b> عند استيراد الحضانة لقائمة الأطفال أو تسجيل الطاقم بأرقام جوالاتهم، تُحفظ بيانات تواصل أولياء الأمور والمعلمات (الجوال أو البريد) لربط كل شخص بفصله أو بأطفاله تلقائيًا عند دخوله.</li>
+        <li><b>بيانات تقنية محدودة:</b> سجلات تشغيل ضرورية لأمان الخدمة واستقرارها (مثل وقت الطلب ونوع الخطأ). لا نستخدم أدوات تتبع إعلانية ولا نجمع موقعك الجغرافي.</li>
+      </ul>
 
-  <section id="en" dir="ltr" lang="en">
-    <h2>Privacy Policy (English)</h2>
-    <p>Nabta connects nurseries with families. We collect only what the service needs: account email and display name, children's names and classes, attendance, daily updates and growth reports recorded by the nursery, health notes and authorised pickup people added by families, and photos/videos, messages and comments shared in the app. When a nursery imports its roster, guardians' contact details may be stored to verify who joins.</p>
-    <p>Data is used only to run the app. We do not sell data, show ads or track users. Parents see only their own children, teachers only their classes, and each nursery only its own data — enforced by the database. Data is stored with Supabase, encrypted in transit and at rest.</p>
-    <p><b>Terms of use:</b> Nabta is a private space between a nursery and its families. There is no tolerance for objectionable or abusive content. Any comment, message or post can be reported (long-press → Report) and its author blocked; the nursery's administrators review reports and remove offending content and members within 24 hours.</p>
-    <p>You can delete your account at any time in the app (More → Account → Delete account). The app is intended for adults (parents and nursery staff). Contact: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-  </section>
+      <h3>٢. كيف نستخدم البيانات</h3>
+      <ul>
+        <li>لتشغيل التطبيق فقط: عرض يوم طفلك لك، وتمكين الحضانة من التواصل معك، وإرسال رموز الدخول والدعوات والتنبيهات.</li>
+        <li>لا نبيع البيانات، ولا نستخدمها للإعلانات أو التتبع، ولا نشاركها مع أي طرف لأغراض تسويقية.</li>
+      </ul>
+
+      <h3>٣. من يرى ماذا</h3>
+      <ul>
+        <li>ولي الأمر يرى أطفاله فقط، والمعلمة ترى أطفال فصولها فقط، وإدارة الحضانة ترى حضانتها فقط.</li>
+        <li>الصور والفيديو والملفات خاصة بأسر الفصل (أو بأعضاء الحضانة عند نشرها للجميع)، وتُعرض بروابط مؤقتة تنتهي صلاحيتها.</li>
+        <li>بيانات الرسوم تراها إدارة الحضانة، وولي الأمر يرى رسوم أطفاله فقط.</li>
+        <li>هذه القيود مطبّقة في قاعدة البيانات نفسها، لا في التطبيق فقط.</li>
+      </ul>
+
+      <h3>٤. مزوّدو الخدمة</h3>
+      <p>نستعين بمزوّدين موثوقين لتشغيل الخدمة فقط، ولا يحق لهم استخدام البيانات لأي غرض آخر:</p>
+      <ul>
+        <li><b>Supabase:</b> قاعدة البيانات وتخزين الملفات وتسجيل الدخول.</li>
+        <li><b>مزوّد رسائل SMS:</b> لإرسال رموز التحقق إلى رقم جوالك.</li>
+        <li><b>مزوّد بريد إلكتروني:</b> لإرسال الدعوات ورسائل التحقق.</li>
+        <li><b>Apple و Google:</b> عند اختيارك الدخول بحسابهما فقط؛ نستلم منهما بريدك واسمك (إن سمحت بذلك).</li>
+      </ul>
+
+      <h3>٥. التخزين والحماية</h3>
+      <p>تُنقل البيانات مشفّرة (HTTPS)، وتُخزّن مشفّرة لدى مزوّد الخدمة. الوصول محكوم بصلاحيات دقيقة لكل حضانة ودور، ويُحتفظ بسجل لتعديلات الدفعات لحماية الأسر والحضانة.</p>
+
+      <h3>٦. مدة الاحتفاظ والحذف</h3>
+      <ul>
+        <li>تحتفظ الحضانة بالبيانات طوال مدة استخدامها للخدمة.</li>
+        <li>تقدر تحذف حسابك في أي وقت من التطبيق: المزيد ← الحساب ← حذف الحساب. يُحذف حسابك وبياناتك الشخصية فورًا، وتبقى المنشورات والرسائل السابقة لدى الحضانة باسم «حساب محذوف».</li>
+        <li>لحذف بيانات طفل كاملة تواصل مع حضانتك أو معنا، وننفّذ الطلب خلال ٣٠ يومًا.</li>
+      </ul>
+
+      <h3>٧. حقوقك</h3>
+      <p>لك حق الاطلاع على بياناتك وتصحيحها وطلب حذفها أو الحصول على نسخة منها. عدّل بياناتك من داخل التطبيق، أو راسلنا لأي طلب آخر.</p>
+
+      <h3>٨. الأطفال</h3>
+      <p>التطبيق موجّه للبالغين (أولياء الأمور وطاقم الحضانة). الأطفال لا يستخدمون التطبيق ولا ينشئون حسابات، وبياناتهم يضيفها أولياؤهم أو حضانتهم فقط.</p>
+
+      <h3>٩. التغييرات على السياسة</h3>
+      <p>قد نحدّث هذه السياسة، ونوضّح تاريخ آخر تحديث أعلاه. عند أي تغيير جوهري نبلغك داخل التطبيق.</p>
+
+      <h3>١٠. التواصل</h3>
+      <p>لأي سؤال عن الخصوصية: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
+    </section>
+
+    <section id="terms">
+      <h2>شروط الاستخدام</h2>
+      <p class="muted">آخر تحديث: ٢٦ سبتمبر ٢٠٢٦</p>
+      <ul>
+        <li><b>الخدمة:</b> نبتة مساحة خاصة بين الحضانة وأسر أطفالها. باستخدامك التطبيق توافق على هذه الشروط وعلى سياسة الخصوصية.</li>
+        <li><b>الحساب:</b> أنت مسؤول عن الحفاظ على جوالك وحسابك، وعن صحة البيانات التي تضيفها.</li>
+        <li><b>احترام الخصوصية:</b> توافق على احترام خصوصية الأطفال والأسر والطاقم، وعدم مشاركة صور الأطفال أو بياناتهم خارج التطبيق دون إذن أسرهم.</li>
+        <li><b>لا تسامح مع المحتوى المسيء:</b> يُمنع نشر أي محتوى مسيء أو غير لائق أو مزعج، أو أي إساءة أو تنمّر أو تحرّش.</li>
+        <li><b>البلاغات والحظر:</b> تقدر تبلّغ عن أي تعليق أو رسالة أو منشور بالضغط المطوّل عليه واختيار «إبلاغ»، أو تحظر كاتبه. تراجع إدارة الحضانة البلاغات وتحذف المحتوى المخالف وتزيل أصحابه خلال ٢٤ ساعة.</li>
+        <li><b>مسؤولية الحضانة:</b> الحضانة مسؤولة عن قبول الأعضاء وعن المحتوى الذي ينشره طاقمها وعن بيانات الرسوم التي تسجّلها، ولها إزالة أي عضو يخالف هذه الشروط.</li>
+        <li><b>الرسوم:</b> ما يظهر في قسم الرسوم سجل تُدخله الحضانة للمتابعة فقط؛ الدفع يتم مباشرة بين الأسرة والحضانة خارج التطبيق.</li>
+        <li><b>التوفر:</b> التطبيق مقدّم «كما هو»، ونعمل على توفره وحماية بياناته قدر الإمكان، وقد نحدّث المزايا أو نوقفها مع إشعار مسبق.</li>
+        <li><b>إنهاء الاستخدام:</b> تقدر تحذف حسابك في أي وقت، ولنا إيقاف أي حساب يخالف هذه الشروط.</li>
+      </ul>
+    </section>
+
+    <section id="support">
+      <h2>الدعم</h2>
+      <ul>
+        <li><b>كيف أدخل؟</b> حمّل التطبيق واختر «الدخول برقم الجوال»، واكتب الرقم المسجّل عند الحضانة، ثم الرمز الذي يصلك برسالة. تدخل مباشرة إلى فصلك أو أطفالك.</li>
+        <li><b>رقمي غير مسجّل:</b> تواصل مع إدارة الحضانة لتضيف رقمك، أو اختر «عندي رمز دعوة» واكتب الرمز الذي وصلك.</li>
+        <li><b>طلبي بانتظار الموافقة:</b> إذا انضممت برمز الفصل وبياناتك غير مسجّلة عند الحضانة، تراجع المعلمة أو الإدارة طلبك وتوافق عليه.</li>
+        <li><b>ما وصلني الرمز:</b> تأكد من الرقم، وانتظر دقيقة ثم اضغط «إعادة الإرسال».</li>
+        <li><b>تغيير اللغة:</b> من المزيد ← اللغة، اختر العربية أو English.</li>
+        <li><b>للحضانات:</b> من «إدارة الحضانة» تقدر تستورد الأطفال من Excel، وتسجّل المعلمات بأرقام جوالاتهن، وتدير الرسوم والدفعات.</li>
+      </ul>
+      <p>راسلنا: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
+    </section>
+  </div>
+
+  <!-- ============================== English ============================== -->
+  <div class="doc" lang="en" dir="ltr">
+    <header><span>🌱</span><h1>Nabta</h1></header>
+    <p>An app that connects nurseries with families: the child's day, attendance, moments, events, announcements, fees and messages.</p>
+    <nav><a href="#privacy-en">Privacy Policy</a><a href="#terms-en">Terms of Use</a><a href="#support-en">Support</a></nav>
+
+    <section id="privacy-en">
+      <h2>Privacy Policy</h2>
+      <p class="muted">Last updated: 26 September 2026</p>
+      <p>Nurseries use Nabta to share children's days with their families. The nursery owns the data and decides who joins; we operate the app on its behalf. This policy explains what we collect, how we use and protect it, and your rights.</p>
+
+      <h3>1. Data we collect</h3>
+      <ul>
+        <li><b>Account data:</b> your mobile number (when you sign in with an SMS code), or your email address (when you sign in with email, Apple or Google), and the name you appear with inside the nursery. For email sign-in, your password is stored hashed and is never visible to us.</li>
+        <li><b>Child data:</b> name and class; attendance, check-in/out, daily updates (meals, naps, activities) and growth reports recorded by the nursery; and health notes, date of birth, emergency contact and authorised pickup people added by the family.</li>
+        <li><b>Content:</b> photos, videos, announcements and attached PDF files posted by nursery staff, plus messages, comments, likes and event responses.</li>
+        <li><b>Fee records:</b> amounts owed per child, recorded payments and receipt numbers, as entered by the nursery's administration. We do not collect card or bank details, and no payment is processed inside the app.</li>
+        <li><b>Bulk enrolment data:</b> when a nursery imports its roster or registers staff by mobile number, guardians' and teachers' contact details (mobile or email) are stored so each person is linked to their class or children automatically when they sign in.</li>
+        <li><b>Limited technical data:</b> operational logs needed for security and reliability (such as request time and error type). We use no advertising trackers and do not collect your location.</li>
+      </ul>
+
+      <h3>2. How we use data</h3>
+      <ul>
+        <li>Only to run the app: showing you your child's day, letting the nursery communicate with you, and sending sign-in codes, invitations and notifications.</li>
+        <li>We do not sell data, use it for advertising or tracking, or share it with anyone for marketing.</li>
+      </ul>
+
+      <h3>3. Who sees what</h3>
+      <ul>
+        <li>Parents see only their own children, teachers only the children in their classes, and each nursery's administration only its own nursery.</li>
+        <li>Photos, videos and files are visible only to the class's families (or to the nursery's members when posted school-wide) and are served through expiring links.</li>
+        <li>Fee records are visible to the nursery's administration, and each parent sees only their own children's fees.</li>
+        <li>These rules are enforced in the database itself, not only in the app.</li>
+      </ul>
+
+      <h3>4. Service providers</h3>
+      <p>We rely on trusted providers solely to run the service; they may not use the data for any other purpose:</p>
+      <ul>
+        <li><b>Supabase:</b> database, file storage and authentication.</li>
+        <li><b>SMS provider:</b> to deliver verification codes to your mobile number.</li>
+        <li><b>Email provider:</b> to deliver invitations and verification emails.</li>
+        <li><b>Apple and Google:</b> only if you choose to sign in with them; we receive your email and name (if you allow it).</li>
+      </ul>
+
+      <h3>5. Storage and security</h3>
+      <p>Data is encrypted in transit (HTTPS) and at rest with our hosting provider. Access is governed by fine-grained permissions per nursery and role, and changes to payment records are logged to protect both families and the nursery.</p>
+
+      <h3>6. Retention and deletion</h3>
+      <ul>
+        <li>The nursery keeps its data for as long as it uses the service.</li>
+        <li>You can delete your account at any time in the app: More → Account → Delete account. Your account and personal data are deleted immediately; earlier posts and messages remain with the nursery under "Deleted account".</li>
+        <li>To delete a child's data entirely, contact your nursery or us; we complete such requests within 30 days.</li>
+      </ul>
+
+      <h3>7. Your rights</h3>
+      <p>You may access, correct, delete or request a copy of your data. Edit your details inside the app, or email us for any other request.</p>
+
+      <h3>8. Children</h3>
+      <p>The app is intended for adults (parents and nursery staff). Children do not use the app or create accounts; their data is added only by their guardians or their nursery.</p>
+
+      <h3>9. Changes to this policy</h3>
+      <p>We may update this policy and will show the date of the latest update above. We will notify you in the app of any material change.</p>
+
+      <h3>10. Contact</h3>
+      <p>For any privacy question: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
+    </section>
+
+    <section id="terms-en">
+      <h2>Terms of Use</h2>
+      <p class="muted">Last updated: 26 September 2026</p>
+      <ul>
+        <li><b>The service:</b> Nabta is a private space between a nursery and its children's families. By using the app you agree to these terms and to the Privacy Policy.</li>
+        <li><b>Your account:</b> you are responsible for keeping your phone and account secure and for the accuracy of the information you add.</li>
+        <li><b>Respect for privacy:</b> you agree to respect the privacy of children, families and staff, and not to share children's photos or data outside the app without their families' permission.</li>
+        <li><b>Zero tolerance for objectionable content:</b> posting offensive, inappropriate or harassing content, or any abuse or bullying, is not allowed.</li>
+        <li><b>Reporting and blocking:</b> any comment, message or post can be reported by long-pressing it and choosing "Report", and its author can be blocked. The nursery's administrators review reports and remove offending content and members within 24 hours.</li>
+        <li><b>The nursery's responsibility:</b> the nursery is responsible for admitting members, for content posted by its staff and for the fee records it enters, and may remove any member who breaches these terms.</li>
+        <li><b>Fees:</b> the Fees section is a record entered by the nursery for tracking only; payment happens directly between the family and the nursery, outside the app.</li>
+        <li><b>Availability:</b> the app is provided "as is". We work to keep it available and its data protected, and may change or discontinue features with prior notice.</li>
+        <li><b>Termination:</b> you may delete your account at any time, and we may suspend any account that breaches these terms.</li>
+      </ul>
+    </section>
+
+    <section id="support-en">
+      <h2>Support</h2>
+      <ul>
+        <li><b>How do I sign in?</b> Download the app, choose "Sign in with mobile number", enter the number registered with your nursery, then the code you receive by SMS. You land straight in your class or with your children.</li>
+        <li><b>My number isn't registered:</b> ask your nursery's administration to add it, or choose "I have an invite code" and enter the code you received.</li>
+        <li><b>My request is pending:</b> if you joined with a class code and your details aren't on the nursery's list, the teacher or administration will review and approve your request.</li>
+        <li><b>I didn't get the code:</b> check the number, wait a minute, then tap "Resend".</li>
+        <li><b>Changing the language:</b> go to More → Language and choose العربية or English.</li>
+        <li><b>For nurseries:</b> from "Nursery admin" you can import children from Excel, register teachers by mobile number, and manage fees and payments.</li>
+      </ul>
+      <p>Email us: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
+    </section>
+  </div>
 </main>
 </body>
 </html>
