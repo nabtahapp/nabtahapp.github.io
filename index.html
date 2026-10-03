@@ -49,12 +49,12 @@ body{margin:0;background:var(--sand);color:var(--ink);overflow:hidden;
 
 /* the subject sits where the photograph's subject sat: centred above the copy */
 .subject{position:absolute;left:0;right:0;top:calc(64*var(--t));bottom:calc(376*var(--t));
-  display:grid;place-items:center}
+  display:grid;place-items:center;container-type:size}
 .scene{grid-area:1/1;display:grid;place-items:center;opacity:0;transition:opacity .9s ease;pointer-events:none}
 .scene.on{opacity:1}
 
 /* chapter one: the Nabtah plant, assembled from the app icon's own crayon layers, breathing */
-.plant{position:relative;width:calc(410*var(--t));height:calc(410*var(--t));margin-top:calc(-24*var(--t))}
+.plant{position:relative;--s:min(calc(410*var(--t)), 112cqh, 92cqw);width:var(--s);height:var(--s);margin-top:calc(-24*var(--t))}
 .plant img{position:absolute;inset:0;width:100%;height:100%;display:block}
 .plant .halo{animation:breathe 7s ease-in-out infinite}
 .plant .leaf-light{transform-origin:50% 62%;animation:swayL 6s ease-in-out infinite}
@@ -69,7 +69,7 @@ body{margin:0;background:var(--sand);color:var(--ink);overflow:hidden;
 @keyframes float{50%{transform:translateY(-1.2%)}}
 
 /* the other chapters: the real app, on a phone */
-.phone{height:calc(350*var(--t));width:calc(350*var(--t)*1206/2622);padding:1.6%;border-radius:12% / 5.6%;
+.phone{--h:min(calc(350*var(--t)), 100cqh);height:var(--h);width:calc(var(--h)*1206/2622);padding:1.6%;border-radius:12% / 5.6%;
   background:#1c1c1e;box-shadow:0 calc(24*var(--t)) calc(60*var(--t)) rgba(43,42,51,.22), inset 0 0 0 1px rgba(255,255,255,.06)}
 .phone video,.phone img{width:100%;height:100%;object-fit:cover;display:block;border-radius:10.6% / 4.9%;background:#f6f1e9}
 
@@ -214,10 +214,7 @@ a:focus-visible,button:focus-visible{outline:calc(1.5*var(--t)) solid var(--sage
 }
 @media (max-width: 1152px) and (max-aspect-ratio: 6/5){
   .index{top:30%}
-  /* tall screens: the copy block is taller in type units, so the subject yields room above it */
-  .subject{bottom:calc(430*var(--t))}
-  .plant{width:calc(330*var(--t));height:calc(330*var(--t));margin-top:0}
-  .phone{height:calc(300*var(--t));width:calc(300*var(--t)*1206/2622)}
+  .plant{margin-top:0}
 }
 
 /* ---------- navigation collapse ---------- */
@@ -250,15 +247,14 @@ a:focus-visible,button:focus-visible{outline:calc(1.5*var(--t)) solid var(--sage
   .index .on::before{display:none}
   .index .on a{color:var(--sageD)}
   .subject{top:calc(126*var(--t));bottom:calc(330*var(--t))}
-  .plant{width:min(calc(330*var(--t)),78vw);height:min(calc(330*var(--t)),78vw);margin:0}
-  .phone{height:calc(330*var(--t));width:calc(330*var(--t)*1206/2622)}
+  .plant{margin:0}
   .hero{bottom:max(9%, calc(62*var(--t)));padding-inline:calc(20*var(--t))}
   .headline{font-size:calc(30*var(--t));line-height:calc(40*var(--t));text-wrap:balance}
   .blurb{font-size:calc(13*var(--t))}
   .blurb br{display:none}
   .next{display:none}
 }
-@media (max-height: 600px){ .blurb{display:none} .subject{bottom:calc(210*var(--t))} .plant{width:calc(380*var(--t));height:calc(380*var(--t))} .phone{height:calc(360*var(--t));width:calc(360*var(--t)*1206/2622)} }
+@media (max-height: 600px){ .blurb{display:none} .subject{bottom:calc(210*var(--t))} }
 </style>
 </head>
 <body>
