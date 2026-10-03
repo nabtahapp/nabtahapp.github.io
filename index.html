@@ -212,7 +212,13 @@ a:focus-visible,button:focus-visible{outline:calc(1.5*var(--t)) solid var(--sage
   .index a{padding:calc(7*var(--t)) 0}
   .hero{padding-inline:calc(40*var(--t))}
 }
-@media (max-width: 1152px) and (max-aspect-ratio: 6/5){ .index{top:30%} }
+@media (max-width: 1152px) and (max-aspect-ratio: 6/5){
+  .index{top:30%}
+  /* tall screens: the copy block is taller in type units, so the subject yields room above it */
+  .subject{bottom:calc(430*var(--t))}
+  .plant{width:calc(330*var(--t));height:calc(330*var(--t));margin-top:0}
+  .phone{height:calc(300*var(--t));width:calc(300*var(--t)*1206/2622)}
+}
 
 /* ---------- navigation collapse ---------- */
 @media (max-width: 830px){
