@@ -1,268 +1,538 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>نبتة · Nabta — الخصوصية والشروط والدعم · Privacy, Terms & Support</title>
-<meta name="description" content="سياسة الخصوصية وشروط الاستخدام والدعم لتطبيق نبتة · Privacy policy, terms of use and support for the Nabta app.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=IBM+Plex+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>نبته — كل يومٍ من نموّ طفلك… بين يديك</title>
+<script>if(!matchMedia("(prefers-reduced-motion: reduce)").matches){document.documentElement.className="anim";setTimeout(function(){document.documentElement.classList.remove("anim")},3200);}</script>
+<meta name="description" content="نبته يجمع الأهالي والمعلمات وإدارة الحضانة في مكان واحد: يوم الطفل، اللحظات، الاستلام والتواصل.">
+<link rel="icon" href="assets/img/icon.png">
 <style>
-  :root { --bg:#F6F1E9; --card:#FFFDF9; --ink:#2B2A33; --ink2:#5E5A68; --line:#E8E0D2; --sage:#3F6B55; --chip:#E9E2D5; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#1E1C1A; --card:#2A2724; --ink:#F2EEE8; --ink2:#C9C2B8; --line:#3A3530; --sage:#8DB9A0; --chip:#3A3530; } }
-  * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--ink); font-family:"IBM Plex Sans Arabic", "IBM Plex Sans", -apple-system, Tahoma, sans-serif; line-height:1.9; }
-  .doc[lang="en"] { font-family:"IBM Plex Sans", -apple-system, "Segoe UI", sans-serif; line-height:1.7; }
-  main { max-width:760px; margin:0 auto; padding:24px 16px 64px; }
-  .top { display:flex; justify-content:flex-end; }
-  .switch { display:inline-flex; background:var(--chip); border-radius:999px; padding:4px; gap:4px; }
-  .switch button { border:0; background:transparent; color:var(--ink2); font:600 14px "IBM Plex Sans Arabic", "IBM Plex Sans", sans-serif; padding:6px 16px; border-radius:999px; cursor:pointer; }
-  .switch button[aria-pressed="true"] { background:var(--card); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,.08); }
-  header { display:flex; align-items:center; gap:12px; margin:8px 0; }
-  header span { font-size:40px; }
-  h1 { font-size:34px; margin:0; }
-  h2 { font-size:21px; margin:28px 0 6px; color:var(--sage); }
-  h3 { font-size:17px; margin:22px 0 4px; color:var(--ink); }
-  section { background:var(--card); border:1px solid var(--line); border-radius:22px; padding:8px 22px 18px; margin-top:18px; }
-  p, li { color:var(--ink2); font-size:16px; }
-  li { margin-bottom:6px; }
-  a { color:var(--sage); }
-  .muted { font-size:14px; color:var(--ink2); }
-  nav { display:flex; flex-wrap:wrap; gap:6px 16px; }
-  nav a { font-weight:600; }
-  /* With JavaScript only the chosen language shows; without it both are readable one after the other. */
-  .js .doc:not(.active) { display:none; }
+/* ---------- self-hosted faces (IBM Plex Sans Arabic, OFL — the app's own typeface) ---------- */
+@font-face{font-family:'Plex';src:url(assets/fonts/plex-regular.ttf) format('truetype');font-weight:400;font-display:block}
+@font-face{font-family:'Plex';src:url(assets/fonts/plex-medium.ttf) format('truetype');font-weight:500;font-display:block}
+@font-face{font-family:'Plex';src:url(assets/fonts/plex-semibold.ttf) format('truetype');font-weight:600;font-display:block}
+@font-face{font-family:'Plex';src:url(assets/fonts/plex-bold.ttf) format('truetype');font-weight:700;font-display:block}
+
+/* ---------- reference unit: one pixel of the 1280x800 canvas, scaled to the viewport ---------- */
+:root{
+  --u: clamp(0.68px, min(100vw / 1280, 100vh / 800), 1.72px);
+  --t: var(--u);
+  --u: clamp(0.68px, min(100vw / 1280, 100dvh / 800), 1.72px);
+  /* Nabtah tokens */
+  --sand:#F6F1E9; --sand2:#EFE7DA; --paper:#FFFDF9; --ink:#2B2A33; --ink2:#5E5A68;
+  --sage:#7FA38A; --sageD:#3F6A52; --sageL:#DDE9E0; --coral:#E9826B; --sun:#F2C265; --sky:#8FB8D8;
+  --line: rgba(43,42,51,.14);
+  --hair: max(1px, calc(1 * var(--u)));
+  --nudge: 0px;
+  --e-mask: cubic-bezier(.16,1,.3,1);
+  --e-line: cubic-bezier(.65,0,.35,1);
+  --e-soft: cubic-bezier(.22,.61,.36,1);
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--sand);color:var(--ink);overflow:hidden;
+  font-family:'Plex',-apple-system,'Geeza Pro',Arial,sans-serif;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;text-rendering:geometricPrecision}
+.stage{position:fixed;inset:0;overflow:hidden}
+
+/* ---------- the scene: warm paper with soft crayon light ---------- */
+.bg{position:absolute;inset:0;will-change:transform;transform-origin:50% 50%;backface-visibility:hidden;
+  background:
+    radial-gradient(ellipse 46% 52% at 50% 40%, rgba(221,233,224,.95), rgba(221,233,224,0) 70%),
+    radial-gradient(circle at 18% 78%, rgba(250,220,211,.55), rgba(250,220,211,0) 22%),
+    radial-gradient(circle at 84% 18%, rgba(251,235,198,.6), rgba(251,235,198,0) 20%),
+    var(--sand)}
+/* paper grain */
+.bg::after{content:"";position:absolute;inset:0;opacity:.35;mix-blend-mode:multiply;pointer-events:none;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .55 0 0 0 0 .5 0 0 0 0 .45 0 0 0 .18 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")}
+
+/* the subject sits where the photograph's subject sat: centred above the copy */
+.subject{position:absolute;left:0;right:0;top:calc(64*var(--t));bottom:calc(376*var(--t));
+  display:grid;place-items:center}
+.scene{grid-area:1/1;display:grid;place-items:center;opacity:0;transition:opacity .9s ease;pointer-events:none}
+.scene.on{opacity:1}
+
+/* chapter one: the Nabtah plant, assembled from the app icon's own crayon layers, breathing */
+.plant{position:relative;width:calc(410*var(--t));height:calc(410*var(--t));margin-top:calc(-24*var(--t))}
+.plant img{position:absolute;inset:0;width:100%;height:100%;display:block}
+.plant .halo{animation:breathe 7s ease-in-out infinite}
+.plant .leaf-light{transform-origin:50% 62%;animation:swayL 6s ease-in-out infinite}
+.plant .leaf-dark{transform-origin:50% 52%;animation:swayR 6.5s ease-in-out infinite}
+.plant .flower{transform-origin:50% 34%;animation:nod 5s ease-in-out infinite}
+.plant .dots{animation:float 9s ease-in-out infinite}
+.plant .rings{animation:float 11s ease-in-out infinite reverse}
+@keyframes breathe{50%{transform:scale(1.025)}}
+@keyframes swayL{50%{transform:rotate(-2.2deg)}}
+@keyframes swayR{50%{transform:rotate(2deg)}}
+@keyframes nod{50%{transform:rotate(1.6deg) translateY(-0.6%)}}
+@keyframes float{50%{transform:translateY(-1.2%)}}
+
+/* the other chapters: the real app, on a phone */
+.phone{height:calc(350*var(--t));width:calc(350*var(--t)*1206/2622);padding:1.6%;border-radius:12% / 5.6%;
+  background:#1c1c1e;box-shadow:0 calc(24*var(--t)) calc(60*var(--t)) rgba(43,42,51,.22), inset 0 0 0 1px rgba(255,255,255,.06)}
+.phone video,.phone img{width:100%;height:100%;object-fit:cover;display:block;border-radius:10.6% / 4.9%;background:#f6f1e9}
+
+/* ---------- frame: 30u inset, 1px hairline, 26u chamfer ---------- */
+.frame{position:absolute;left:calc(30*var(--u));top:calc(30*var(--u));right:calc(30*var(--u));bottom:calc(31*var(--u))}
+.ln{position:absolute;background:var(--line)}
+.ln-t{left:calc(26*var(--u));right:calc(26*var(--u));top:0;height:var(--hair)}
+.ln-b{left:calc(26*var(--u));right:calc(26*var(--u));bottom:0;height:var(--hair)}
+.ln-l{top:calc(26*var(--u));bottom:calc(26*var(--u));left:0;width:var(--hair)}
+.ln-r{top:calc(26*var(--u));bottom:calc(26*var(--u));right:0;width:var(--hair)}
+.cn{position:absolute;width:calc(26*var(--u));height:calc(26*var(--u))}
+.cn-tl{left:0;top:0;background:linear-gradient(to bottom right,transparent calc(50% - .65px),var(--line) calc(50% - .65px),var(--line) calc(50% + .65px),transparent calc(50% + .65px))}
+.cn-br{right:0;bottom:0;background:linear-gradient(to bottom right,transparent calc(50% - .65px),var(--line) calc(50% - .65px),var(--line) calc(50% + .65px),transparent calc(50% + .65px))}
+.cn-tr{right:0;top:0;background:linear-gradient(to bottom left,transparent calc(50% - .65px),var(--line) calc(50% - .65px),var(--line) calc(50% + .65px),transparent calc(50% + .65px))}
+.cn-bl{left:0;bottom:0;background:linear-gradient(to bottom left,transparent calc(50% - .65px),var(--line) calc(50% - .65px),var(--line) calc(50% + .65px),transparent calc(50% + .65px))}
+
+/* ---------- labels ---------- */
+.lbl{font-family:'Plex',sans-serif;font-weight:600;font-size:calc(12*var(--t));line-height:1;white-space:nowrap}
+.t{position:relative;top:var(--nudge);display:inline-block;text-align:right;white-space:pre}
+
+/* ---------- masthead (mirrored: wordmark on the right, controls on the left) ---------- */
+.logo{position:absolute;right:calc(24*var(--t));top:calc(18*var(--t));height:calc(28*var(--t));
+  display:flex;align-items:center;gap:calc(9*var(--t));text-decoration:none;color:var(--ink)}
+.logo .mark{display:flex;align-items:center;gap:calc(9*var(--t))}
+.logo img{width:calc(28*var(--t));height:calc(28*var(--t));border-radius:calc(7*var(--t))}
+.logo b{font-size:calc(22*var(--t));font-weight:700;line-height:1}
+.masthead{position:absolute;left:calc(11*var(--t));top:calc(12*var(--t));height:calc(41*var(--t));display:flex;align-items:center}
+.navset{display:contents}
+.links{display:flex;align-items:center;gap:calc(18*var(--t));margin-left:calc(18*var(--t))}
+.links a{color:var(--ink2);text-decoration:none;transition:color .25s ease}
+.links a:hover{color:var(--ink)}
+.pill{height:calc(41*var(--t));display:flex;align-items:center;text-decoration:none;position:relative;cursor:pointer;border:0;padding:0}
+.pill .ico{flex:none;display:block}
+.enter{padding:0 calc(18*var(--t));background:rgba(43,42,51,.05);
+  -webkit-backdrop-filter:blur(calc(12*var(--t)));backdrop-filter:blur(calc(12*var(--t)));transition:background .3s ease}
+.enter:hover{background:rgba(43,42,51,.09)}
+.enter .ico{width:calc(7*var(--t));height:calc(11*var(--t));fill:var(--sageD)}
+.enter span{color:var(--ink);margin-right:calc(8*var(--t))}
+.menu{padding:0 calc(20*var(--t)) 0 calc(22*var(--t));background:var(--ink);
+  clip-path:polygon(calc(15*var(--t)) 0, 100% 0, 100% 100%, 0 100%, 0 calc(15*var(--t)));transition:background .3s ease}
+.menu .ico{width:calc(10*var(--t));height:calc(10*var(--t));fill:var(--sand)}
+.menu span{color:var(--sand);margin-right:calc(8*var(--t))}
+
+/* ---------- chapter rail (on the right, the reading start) ---------- */
+.index{position:absolute;right:calc(14*var(--t));top:50%;transform:translateY(calc(-50% - 40*var(--t)));list-style:none;margin:0;padding:0}
+.index li{height:calc(28*var(--t));display:flex;align-items:center;position:relative}
+.index a{font-weight:600;font-size:calc(12*var(--t));line-height:1;text-decoration:none;white-space:nowrap;
+  color:rgba(43,42,51,.36);transition:color .3s ease}
+.index a:hover,.index .on a{color:var(--ink)}
+.index .on::before{content:"";position:absolute;right:calc(-13.5*var(--t));top:50%;width:calc(6*var(--t));height:calc(7*var(--t));
+  transform:translateY(-50%);background:var(--sageD)}
+
+/* ---------- hero copy ---------- */
+.hero{position:absolute;left:0;right:0;bottom:max(7.98%, calc(59*var(--t)));display:flex;flex-direction:column;align-items:center;text-align:center}
+.headline{margin:0;font-weight:700;font-size:calc(38*var(--t));line-height:calc(48*var(--t));color:var(--ink)}
+.blurb{margin:calc(12*var(--t)) 0 0;font-weight:400;font-size:calc(13.5*var(--t));line-height:calc(24*var(--t));
+  color:var(--ink2);max-width:calc(560*var(--t))}
+.cta{margin-top:calc(22*var(--t));position:relative;height:calc(44*var(--t));padding:0 calc(26*var(--t));
+  display:flex;align-items:center;justify-content:center;text-decoration:none}
+.cta-glass{position:absolute;inset:0;background:var(--ink);
+  clip-path:polygon(calc(10*var(--t)) 0, calc(100% - 3*var(--t)) 0, 100% calc(3*var(--t)), 100% calc(100% - 10*var(--t)),
+                    calc(100% - 10*var(--t)) 100%, calc(3*var(--t)) 100%, 0 calc(100% - 3*var(--t)), 0 calc(10*var(--t)));
+  transition:background .3s ease}
+.cta:hover .cta-glass{background:#3d3b47}
+.cta-in{position:relative;display:flex;align-items:center}
+.cta .ico{width:calc(7*var(--t));height:calc(11*var(--t));fill:var(--sun);flex:none}
+.cta .t{margin-right:calc(8*var(--t));color:var(--sand)}
+.hero .hrise{transition:transform .5s var(--e-mask)}
+.hero .blurb{transition:opacity .4s ease, transform .4s ease}
+.swapping .hrise{transform:translateY(112%)}
+.swapping .blurb{opacity:0;transform:translateY(calc(7*var(--t)))}
+
+/* ---------- dock ---------- */
+.dock{position:absolute;left:0;right:0;bottom:0;height:calc(47*var(--t))}
+.dock .rule{position:absolute;left:0;right:0;top:0;height:var(--hair);background:var(--line)}
+.dock .div{position:absolute;top:0;bottom:0;width:var(--hair);background:rgba(43,42,51,.18)}
+.dock .div-r{right:calc(132*var(--t))}
+.dock .div-l{left:calc(150*var(--t))}
+.dock a,.dock button{display:flex;align-items:center;text-decoration:none;background:none;border:0;padding:0;cursor:pointer;
+  color:rgba(43,42,51,.75);transition:color .3s ease;font:inherit}
+.dock a:hover,.dock button:hover{color:var(--ink)}
+.lang{position:absolute;right:calc(26*var(--t));top:0;bottom:0}
+.lang .ico{width:calc(14*var(--t));height:calc(14*var(--t));fill:none;stroke:currentColor;stroke-width:1.4;margin-left:calc(9*var(--t))}
+.next{position:absolute;left:50%;transform:translateX(-50%);top:0;bottom:0}
+.next .ico{width:calc(5*var(--t));height:calc(7*var(--t));fill:currentColor;margin-left:calc(9*var(--t))}
+.talk{position:absolute;left:calc(24*var(--t));top:0;bottom:0}
+.talk .ico{width:calc(16*var(--t));height:calc(15*var(--t));margin-right:calc(10*var(--t));fill:none;stroke:currentColor;stroke-width:1.6}
+
+/* ================= ENTRANCE (same score as the reference; strokes mirrored for RTL) ================= */
+@keyframes drawX{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+@keyframes drawY{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes maskUp{from{transform:translateY(112%)}to{transform:translateY(0)}}
+@keyframes settle{from{opacity:0;transform:translateY(calc(7*var(--t)))}to{opacity:1;transform:none}}
+@keyframes markIn{from{transform:translateY(-50%) scaleX(0)}to{transform:translateY(-50%) scaleX(1)}}
+@keyframes settleC{from{opacity:0;transform:translate(-50%,calc(7*var(--t)))}to{opacity:1;transform:translateX(-50%)}}
+@keyframes grow{from{opacity:0;transform:translateY(calc(16*var(--t))) scale(.96)}to{opacity:1;transform:none}}
+.anim .ln-t{transform-origin:right center;animation:drawX .5s var(--e-line) .04s both}
+.anim .ln-r{transform-origin:center top;animation:drawY .5s var(--e-line) .04s both}
+.anim .ln-b{transform-origin:left center;animation:drawX .5s var(--e-line) .2s both}
+.anim .ln-l{transform-origin:center bottom;animation:drawY .5s var(--e-line) .2s both}
+.anim .cn{animation:fadeIn .3s linear .55s both}
+.anim .logo{overflow:hidden}
+.anim .logo .mark{animation:maskUp .8s var(--e-mask) .16s both}
+.anim .enter{animation:settle .56s var(--e-soft) .3s both}
+.anim .menu{animation:settle .56s var(--e-soft) .36s both}
+.anim .links{animation:fadeIn .4s linear .34s both}
+.headline .hrow{display:block;overflow:hidden;padding-bottom:calc(4*var(--t))}
+.headline .hrise{display:block}
+.anim .headline .hrise{animation:maskUp .9s var(--e-mask) both}
+.anim .headline .hrow:first-child .hrise{animation-delay:.42s}
+.anim .headline .hrow+.hrow .hrise{animation-delay:.52s}
+.anim .subject{animation:grow 1.1s var(--e-mask) .1s both}
+.anim .index{animation:fadeIn .45s linear .6s both}
+.anim .index .on::before{animation:markIn .42s var(--e-soft) .64s both}
+.anim .blurb{animation:settle .72s var(--e-soft) .7s both}
+.anim .cta{animation:settle .62s var(--e-soft) .86s both}
+.anim .dock .rule{transform-origin:right center;animation:drawX .52s var(--e-line) .92s both}
+.anim .dock .div{transform-origin:center top;animation:drawY .36s var(--e-line) 1.06s both}
+.anim .lang{animation:settle .52s var(--e-soft) .96s both}
+.anim .next{animation:settleC .52s var(--e-soft) 1.02s both}
+.anim .talk{animation:settle .52s var(--e-soft) 1.08s both}
+
+/* ---------- a11y ---------- */
+a:focus-visible,button:focus-visible{outline:calc(1.5*var(--t)) solid var(--sageD);outline-offset:calc(3*var(--t))}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* ---------- tablet ---------- */
+@media (max-width: 1152px){
+  :root{
+    --u: clamp(.8px, min(100vw / 1280, 100vh / 800), 1.1px);
+    --u: clamp(.8px, min(100vw / 1280, 100dvh / 800), 1.1px);
+    --t: max(var(--u), clamp(.9px, calc(.9px + (1152px - 100vw) * .00042), 1.12px));
+  }
+  .dock{display:flex;justify-content:space-between;align-items:stretch}
+  .dock .div{display:none}
+  .lang,.talk{position:static;height:auto}
+  .lang{padding:0 min(calc(26*var(--t)),6vw) 0 min(calc(20*var(--t)),5vw);border-left:var(--hair) solid rgba(43,42,51,.18)}
+  .talk{padding:0 min(calc(20*var(--t)),5vw) 0 min(calc(24*var(--t)),6vw);border-right:var(--hair) solid rgba(43,42,51,.18)}
+  .index a{padding:calc(7*var(--t)) 0}
+  .hero{padding-inline:calc(40*var(--t))}
+}
+@media (max-width: 1152px) and (max-aspect-ratio: 6/5){ .index{top:30%} }
+
+/* ---------- navigation collapse ---------- */
+@media (max-width: 830px){
+  .navset{display:flex;flex-direction:column;align-items:stretch;position:absolute;top:calc(52*var(--t));left:0;min-width:calc(200*var(--t));
+    padding:calc(16*var(--t)) calc(20*var(--t)) calc(18*var(--t));gap:calc(4*var(--t));
+    background:rgba(255,253,249,.88);-webkit-backdrop-filter:blur(calc(16*var(--t)));backdrop-filter:blur(calc(16*var(--t)));
+    box-shadow:0 calc(12*var(--t)) calc(32*var(--t)) rgba(43,42,51,.12);
+    clip-path:polygon(calc(15*var(--t)) 0, 100% 0, 100% calc(100% - 15*var(--t)), calc(100% - 15*var(--t)) 100%, 0 100%, 0 calc(15*var(--t)));
+    opacity:0;visibility:hidden;transform:translateY(calc(-6*var(--t)));
+    transition:opacity .34s ease, transform .34s var(--e-soft), visibility .34s;z-index:6}
+  .nav-open .navset{opacity:1;visibility:visible;transform:none}
+  .links{flex-direction:column;align-items:stretch;gap:0;margin-left:0}
+  .links a{padding:calc(10*var(--t)) 0}
+  .navset .enter{margin-top:calc(10*var(--t));height:calc(40*var(--t));background:var(--sand2)}
+}
+
+/* ---------- mobile ---------- */
+@media (max-width: 548px){
+  :root{
+    --u: clamp(.62px, min(100vw / 500, 100vh / 820), 1.1px);
+    --u: clamp(.62px, min(100vw / 500, 100dvh / 820), 1.1px);
+    --t: clamp(1.06px, calc(100vw / 489), 1.12px);
+  }
+  .frame{left:calc(18*var(--u));right:calc(18*var(--u));top:calc(18*var(--u));bottom:calc(18*var(--u))}
+  .logo{right:calc(16*var(--t))}
+  .masthead{left:calc(9*var(--t))}
+  .index{top:calc(66*var(--t));transform:none;right:calc(18*var(--t));display:flex;gap:calc(14*var(--t));flex-wrap:wrap;left:calc(14*var(--t))}
+  .index li{height:calc(24*var(--t))}
+  .index .on::before{display:none}
+  .index .on a{color:var(--sageD)}
+  .subject{top:calc(126*var(--t));bottom:calc(330*var(--t))}
+  .plant{width:min(calc(330*var(--t)),78vw);height:min(calc(330*var(--t)),78vw);margin:0}
+  .phone{height:calc(330*var(--t));width:calc(330*var(--t)*1206/2622)}
+  .hero{bottom:max(9%, calc(62*var(--t)));padding-inline:calc(20*var(--t))}
+  .headline{font-size:calc(30*var(--t));line-height:calc(40*var(--t));text-wrap:balance}
+  .blurb{font-size:calc(13*var(--t))}
+  .blurb br{display:none}
+  .next{display:none}
+}
+@media (max-height: 600px){ .blurb{display:none} .subject{bottom:calc(210*var(--t))} .plant{width:calc(380*var(--t));height:calc(380*var(--t))} .phone{height:calc(360*var(--t));width:calc(360*var(--t)*1206/2622)} }
 </style>
-<script>
-  document.documentElement.classList.add('js');
-  function pickLanguage() {
-    const q = new URLSearchParams(location.search).get('lang');
-    if (q === 'en' || q === 'ar') return q;
-    if (/-en$/.test(location.hash)) return 'en';
-    try { const saved = localStorage.getItem('nabta-lang'); if (saved === 'ar' || saved === 'en') return saved; } catch (e) {}
-    return (navigator.language || 'ar').toLowerCase().startsWith('ar') ? 'ar' : 'en';
-  }
-  function setLanguage(lang, remember) {
-    document.documentElement.lang = lang;
-    document.documentElement.dir = lang === 'ar' ? 'rtl' : 'ltr';
-    document.querySelectorAll('.doc').forEach(d => d.classList.toggle('active', d.lang === lang));
-    document.querySelectorAll('.switch button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.lang === lang)));
-    if (remember) { try { localStorage.setItem('nabta-lang', lang); } catch (e) {} }
-  }
-  addEventListener('DOMContentLoaded', () => {
-    const lang = pickLanguage();
-    setLanguage(lang, false);
-    document.querySelectorAll('.switch button').forEach(b => b.addEventListener('click', () => setLanguage(b.dataset.lang, true)));
-    // /privacy, /terms and /support open the page at their section.
-    const part = location.pathname.split('/').filter(Boolean).pop();
-    if (['privacy','terms','support'].includes(part) && !location.hash) {
-      document.getElementById(lang === 'en' ? part + '-en' : part)?.scrollIntoView();
-    }
-  });
-</script>
 </head>
 <body>
-<main>
-  <div class="top">
-    <div class="switch" role="group" aria-label="Language / اللغة">
-      <button type="button" data-lang="ar" aria-pressed="true">العربية</button>
-      <button type="button" data-lang="en" aria-pressed="false">English</button>
+<div class="stage">
+  <div class="bg" aria-hidden="true"></div>
+
+  <div class="subject" role="img" aria-label="نبتة نبته المرسومة بالطباشير، ثم لقطات حقيقية من التطبيق">
+    <div class="scene on" data-chapter="vision">
+      <div class="plant" aria-hidden="true">
+        <img class="halo" src="assets/img/halo.png" alt=""><img class="blush" src="assets/img/blush.png" alt="">
+        <img class="rings" src="assets/img/rings.png" alt=""><img class="dots" src="assets/img/dots.png" alt="">
+        <img class="stem" src="assets/img/stem.png" alt=""><img class="leaf-light" src="assets/img/leaf-light.png" alt="">
+        <img class="leaf-dark" src="assets/img/leaf-dark.png" alt=""><img class="flower" src="assets/img/flower.png" alt="">
+      </div>
+    </div>
+    <div class="scene" data-chapter="day"><div class="phone"><video data-src="assets/video/day.mp4" poster="assets/img/day-poster.jpg" muted loop playsinline preload="none" aria-hidden="true"></video></div></div>
+    <div class="scene" data-chapter="moments"><div class="phone"><video data-src="assets/video/moments.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div></div>
+    <div class="scene" data-chapter="pickup"><div class="phone"><video data-src="assets/video/pickup.mp4" muted loop playsinline preload="none" aria-hidden="true"></video></div></div>
+    <div class="scene" data-chapter="messages"><div class="phone"><img src="assets/img/messages.jpg" alt="" loading="lazy"></div></div>
+    <div class="scene" data-chapter="admin"><div class="phone"><img src="assets/img/admin.jpg" alt="" loading="lazy"></div></div>
+  </div>
+
+  <div class="frame">
+    <span class="ln ln-t"></span><span class="ln ln-b"></span>
+    <span class="ln ln-l"></span><span class="ln ln-r"></span>
+    <span class="cn cn-tl"></span><span class="cn cn-tr"></span>
+    <span class="cn cn-bl"></span><span class="cn cn-br"></span>
+
+    <a class="logo" href="#" aria-label="نبته — الرئيسية"><span class="mark"><img src="assets/img/icon.png" alt=""><b>نبته</b></span></a>
+
+    <nav class="masthead" aria-label="الرئيسية">
+      <div class="navset" id="navset">
+        <div class="links lbl">
+          <a href="#vision" data-go="vision"><span class="t">القصة</span></a><a href="#day" data-go="day"><span class="t">المزايا</span></a><a href="#admin" data-go="admin"><span class="t">للحضانات</span></a><a href="privacy/"><span class="t">الخصوصية</span></a><a href="support/"><span class="t">الدعم</span></a>
+        </div>
+        <a class="pill enter lbl" href="#admin" data-go="admin">
+          <svg class="ico" viewBox="0 0 7 11" aria-hidden="true"><rect x="3" y="0" width="4" height="5"/><rect x="0" y="4" width="4" height="4"/><rect x="3" y="7" width="4" height="4"/></svg>
+          <span class="t">لوحة الإدارة</span>
+        </a>
+      </div>
+      <button class="pill menu lbl" type="button" aria-expanded="false" aria-controls="navset">
+        <svg class="ico" viewBox="0 0 10 10" aria-hidden="true"><rect x="0" y="0" width="4" height="4" rx=".8"/><rect x="6" y="0" width="4" height="4" rx=".8"/><rect x="0" y="6" width="4" height="4" rx=".8"/><rect x="6" y="6" width="4" height="4" rx=".8"/></svg>
+        <span class="t">القائمة</span>
+      </button>
+    </nav>
+
+    <ul class="index" aria-label="الفصول">
+      <li class="on"><a href="#vision" aria-current="true"><span class="t">الرؤية</span></a></li>
+      <li><a href="#day"><span class="t">يوم الطفل</span></a></li>
+      <li><a href="#moments"><span class="t">اللحظات</span></a></li>
+      <li><a href="#pickup"><span class="t">الاستلام</span></a></li>
+      <li><a href="#messages"><span class="t">التواصل</span></a></li>
+      <li><a href="#admin"><span class="t">الإدارة</span></a></li>
+    </ul>
+
+    <div class="hero">
+      <h1 class="headline"><span class="hrow"><span class="hrise">كل يومٍ من نموّ طفلك</span></span><span class="hrow"><span class="hrise">بين يديك</span></span></h1>
+      <p class="blurb">نبته يجمع الأهالي والمعلمات وإدارة الحضانة في مكان واحد.<br>
+        يوم الطفل، لحظاته، استلامه وتواصلكم مع الحضانة،<br>
+        كلها في تطبيق واحد هادئ وواضح،<br>
+        بالعربية والإنجليزية.</p>
+      <a class="cta lbl" href="support/">
+        <span class="cta-glass"></span>
+        <span class="cta-in">
+          <svg class="ico" viewBox="0 0 7 11" aria-hidden="true"><rect x="3" y="0" width="4" height="5"/><rect x="0" y="4" width="4" height="4"/><rect x="3" y="7" width="4" height="4"/></svg>
+          <span class="t">اطلب نسخة تجريبية لحضانتك</span>
+        </span>
+      </a>
+    </div>
+
+    <div class="dock">
+      <span class="rule"></span><span class="div div-r"></span><span class="div div-l"></span>
+      <a class="lang lbl" href="#" lang="en">
+        <svg class="ico" viewBox="0 0 14 14" aria-hidden="true"><circle cx="7" cy="7" r="6"/><path d="M1 7h12M7 1c2 2 2 10 0 12M7 1c-2 2-2 10 0 12"/></svg>
+        <span class="t">English</span>
+      </a>
+      <button class="next lbl" type="button">
+        <svg class="ico" viewBox="0 0 5 7" aria-hidden="true"><path d="M0 0 H5 L2.5 3 Z"/><path d="M0 4 H5 L2.5 7 Z"/></svg>
+        <span class="t">الفصل التالي</span>
+      </button>
+      <a class="talk lbl" href="mailto:nabtahsupport@gmail.com">
+        <span class="t">تواصل معنا</span>
+        <svg class="ico" viewBox="0 0 16 15" aria-hidden="true">
+          <path d="M8 .8 C12 .8 15.2 3.8 15.2 7.4 C15.2 11 12 14 8 14 C6.6 14 5.3 13.6 4.2 13 L.9 13.9 L1.9 10.9 C1.2 9.9 .8 8.7 .8 7.4 C.8 3.8 4 .8 8 .8 Z"/>
+          <g fill="currentColor" stroke="none"><circle cx="5.2" cy="7.4" r=".95"/><circle cx="8" cy="7.4" r=".95"/><circle cx="10.8" cy="7.4" r=".95"/></g>
+        </svg>
+      </a>
     </div>
   </div>
+</div>
 
-  <!-- ============================== العربية ============================== -->
-  <div class="doc active" lang="ar" dir="rtl">
-    <header><span>🌱</span><h1>نَبتة</h1></header>
-    <p>تطبيق يربط الحضانة بالأسرة: يوم الطفل، الحضور، اللحظات، الفعاليات، الإعلانات، الرسوم، والرسائل.</p>
-    <nav><a href="#privacy">سياسة الخصوصية</a><a href="#terms">شروط الاستخدام</a><a href="#support">الدعم</a></nav>
+<script>
+(function(){
+  "use strict";
+  var RM = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var CH = 'ابتثجحخدذرزسشصضطظعغفقكلمنهوي';
+  var DUR = 400;
 
-    <section id="privacy">
-      <h2>سياسة الخصوصية</h2>
-      <p class="muted">آخر تحديث: ٢٦ سبتمبر ٢٠٢٦</p>
-      <p>تستخدم الحضانات تطبيق نبتة لمشاركة يوم الأطفال مع أسرهم. الحضانة هي صاحبة البيانات، وهي من يقرر من ينضم إليها، ونحن نشغّل التطبيق نيابةً عنها. توضّح هذه السياسة البيانات التي نجمعها وكيف نستخدمها ونحميها، وما هي حقوقك.</p>
+  /* 1. DECODE LABELS — each label resolves in reading order in 400 ms, a band of random letters ahead of it */
+  var labels = [].slice.call(document.querySelectorAll('.t'));
+  labels.forEach(function(el){ el.dataset.text = el.textContent; });
+  function reserve(){
+    var w = [];
+    labels.forEach(function(el){ el.style.width = ''; });
+    labels.forEach(function(el){ w.push(el.getBoundingClientRect().width); });
+    labels.forEach(function(el,i){ el.style.width = (Math.ceil(w[i]*100)/100) + 'px'; });
+  }
+  function settle(el){
+    if (el._raf){ cancelAnimationFrame(el._raf); el._raf = 0; }
+    if (el._t){ clearTimeout(el._t); el._t = 0; }
+    el.textContent = el.dataset.text;
+  }
+  function decode(el, dur){
+    var text = el.dataset.text, n = text.length;
+    if (RM){ settle(el); return; }
+    settle(el);
+    var D = dur || DUR, t0 = performance.now(), lastRoll = 0, rand = new Array(n);
+    function roll(){ for (var i=0;i<n;i++) rand[i] = CH.charAt((Math.random()*CH.length)|0); }
+    roll();
+    function step(now){
+      var p = Math.min(1, (now - t0) / D), front = p * n, out = '', i;
+      if (now - lastRoll > 45){ roll(); lastRoll = now; }
+      for (i = 0; i < n; i++){
+        var c = text.charAt(i);
+        if (i < front) out += c;
+        else if (i < front + 3.6) out += (c === ' ' ? ' ' : rand[i]);
+        else break;
+      }
+      el.textContent = out;
+      if (p < 1) el._raf = requestAnimationFrame(step); else settle(el);
+    }
+    el._raf = requestAnimationFrame(step);
+    el._t = setTimeout(function(){ settle(el); }, D + 500);
+  }
+  [].forEach.call(document.querySelectorAll('a, button'), function(el){
+    var t = el.querySelector('.t');
+    if (t) el.addEventListener('pointerenter', function(){ decode(t); });
+  });
 
-      <h3>١. البيانات التي نجمعها</h3>
-      <ul>
-        <li><b>بيانات الحساب:</b> رقم الجوال (عند الدخول برمز SMS)، أو البريد الإلكتروني (عند الدخول بالبريد أو عبر Apple أو Google)، والاسم الذي تظهر به داخل الحضانة. عند الدخول بالبريد تُحفظ كلمة المرور مشفّرة، ولا نطّلع عليها.</li>
-        <li><b>بيانات الطفل:</b> الاسم والفصل، وما تسجّله الحضانة من حضور وانصراف وتحديثات يومية (وجبات، نوم، نشاط) وتقارير نمو، وما تضيفه الأسرة من ملاحظات صحية وتاريخ ميلاد ورقم طوارئ وأسماء المفوّضين بالاستلام.</li>
-        <li><b>المحتوى:</b> الصور والفيديو والإعلانات وملفات PDF المرفقة التي ينشرها طاقم الحضانة، والرسائل والتعليقات والإعجابات والردود على الفعاليات.</li>
-        <li><b>بيانات الرسوم:</b> المبالغ المستحقة على كل طفل والدفعات المسجّلة وأرقام السندات، كما تُدخلها إدارة الحضانة. لا نجمع أي بيانات بطاقات أو حسابات بنكية، ولا تتم أي عملية دفع داخل التطبيق.</li>
-        <li><b>بيانات التسجيل الجماعي:</b> عند استيراد الحضانة لقائمة الأطفال أو تسجيل الطاقم بأرقام جوالاتهم، تُحفظ بيانات تواصل أولياء الأمور والمعلمات (الجوال أو البريد) لربط كل شخص بفصله أو بأطفاله تلقائيًا عند دخوله.</li>
-        <li><b>بيانات تقنية محدودة:</b> سجلات تشغيل ضرورية لأمان الخدمة واستقرارها (مثل وقت الطلب ونوع الخطأ). لا نستخدم أدوات تتبع إعلانية ولا نجمع موقعك الجغرافي.</li>
-      </ul>
+  /* 2. SCENE PARALLAX — the scene and its subject drift against the pointer on a long ease */
+  var bg = document.querySelector('.bg'), subject = document.querySelector('.subject');
+  var tx = 0, ty = 0, cx = 0, cy = 0, running = false;
+  function tick(){
+    cx += (tx - cx) * 0.045; cy += (ty - cy) * 0.045;
+    var w = innerWidth, h = innerHeight, dx = -cx * w * 0.0156, dy = -cy * h * 0.015;
+    var sc = 1 + 2 * Math.max(Math.abs(dx) / w, Math.abs(dy) / h) + 0.014 * Math.max(0, cy);
+    bg.style.transform = 'translate3d(' + dx.toFixed(2) + 'px,' + dy.toFixed(2) + 'px,0) scale(' + sc.toFixed(4) + ')';
+    subject.style.transform = 'translate3d(' + (dx * 0.55).toFixed(2) + 'px,' + (dy * 0.55).toFixed(2) + 'px,0)';
+    if (Math.abs(tx - cx) < 0.0004 && Math.abs(ty - cy) < 0.0004){ running = false; return; }
+    requestAnimationFrame(tick);
+  }
+  function wake(){ if (!running && !RM){ running = true; requestAnimationFrame(tick); } }
+  addEventListener('pointermove', function(e){
+    if (e.pointerType === 'touch') return;
+    tx = (e.clientX / innerWidth) * 2 - 1; ty = (e.clientY / innerHeight) * 2 - 1; wake();
+  }, {passive:true});
+  document.addEventListener('pointerleave', function(){ tx = 0; ty = 0; wake(); });
 
-      <h3>٢. كيف نستخدم البيانات</h3>
-      <ul>
-        <li>لتشغيل التطبيق فقط: عرض يوم طفلك لك، وتمكين الحضانة من التواصل معك، وإرسال رموز الدخول والدعوات والتنبيهات.</li>
-        <li>لا نبيع البيانات، ولا نستخدمها للإعلانات أو التتبع، ولا نشاركها مع أي طرف لأغراض تسويقية.</li>
-      </ul>
+  /* 3. CHAPTERS — each has its own scene and copy; a newer choice always wins */
+  var COPY = {
+    vision: [['كل يومٍ من نموّ طفلك', 'بين يديك'],
+      ['نبته يجمع الأهالي والمعلمات وإدارة الحضانة في مكان واحد.', 'يوم الطفل، لحظاته، استلامه وتواصلكم مع الحضانة،', 'كلها في تطبيق واحد هادئ وواضح،', 'بالعربية والإنجليزية.']],
+    day: [['يومه معك،', 'لحظة بلحظة'],
+      ['الوصول، الفطور، النشاط، القيلولة والمزاج.', 'كل ما تسجّله المعلمة يصل لولي الأمر فورًا،', 'في صفحة واحدة مرتبة بالوقت،', 'مع تنبيه صحي إن احتاج طفلك عناية خاصة.']],
+    moments: [['لحظاته الصغيرة،', 'أول بأول'],
+      ['صور ومقاطع من الفصل بعرض كامل،', 'تسحبها مثل التطبيقات التي تعرفها،', 'خاصة بأسرة الطفل وحدها،', 'وتحفظ ما تحب منها في ألبومك.']],
+    pickup: [['وصلت؟', 'طفلك يتجهّز'],
+      ['يضغط ولي الأمر «أنا وصلت» فتعرف المعلمة فورًا،', 'ويتابع تجهيز طفله على شاشة القفل والجزيرة التفاعلية،', 'ولا يُسجَّل الاستلام إلا بمسح رمز البوابة.', 'تعرف أكثر، تسأل أقل.']],
+    messages: [['تواصل هادئ،', 'في وقته'],
+      ['رسائل مباشرة مع المعلمة والإدارة،', 'ومحادثة الفصل، وإعلانات الحضانة وفعالياتها،', 'مع ساعات تواصل تحترم وقت الجميع،', 'وإشعارات فورية لما يهمك فقط.']],
+    admin: [['حضانتك كاملة،', 'من شاشة واحدة'],
+      ['استيراد مئات الأطفال من ملف Excel،', 'وتسجيل أرقام الأهالي والمعلمات ليدخلوا مباشرة،', 'والحضور والتقارير والمالية والإعلانات،', 'من الجوال أو من لوحة الإدارة على اللابتوب.']]
+  };
+  var ORDER = ['vision','day','moments','pickup','messages','admin'];
+  var hero = document.querySelector('.hero');
+  var rises = [].slice.call(hero.querySelectorAll('.hrise'));
+  var blurb = hero.querySelector('.blurb');
+  var scenes = [].slice.call(document.querySelectorAll('.scene'));
+  var chapter = 'vision', swapT = 0;
 
-      <h3>٣. من يرى ماذا</h3>
-      <ul>
-        <li>ولي الأمر يرى أطفاله فقط، والمعلمة ترى أطفال فصولها فقط، وإدارة الحضانة ترى حضانتها فقط.</li>
-        <li>الصور والفيديو والملفات خاصة بأسر الفصل (أو بأعضاء الحضانة عند نشرها للجميع)، وتُعرض بروابط مؤقتة تنتهي صلاحيتها.</li>
-        <li>بيانات الرسوم تراها إدارة الحضانة، وولي الأمر يرى رسوم أطفاله فقط.</li>
-        <li>هذه القيود مطبّقة في قاعدة البيانات نفسها، لا في التطبيق فقط.</li>
-      </ul>
+  function showScene(s){
+    var v = s.querySelector('video');
+    function go(){
+      if (s.dataset.chapter !== chapter) return;
+      if (v){ try { v.currentTime = 0; } catch(err){} var pr = v.play(); if (pr && pr.catch) pr.catch(function(){}); }
+      scenes.forEach(function(o){
+        if (o === s){ o.classList.add('on'); return; }
+        if (!o.classList.contains('on')) return;
+        o.classList.remove('on');
+        var ov = o.querySelector('video');
+        if (ov) setTimeout(function(){ if (!o.classList.contains('on')) ov.pause(); }, 950);
+      });
+    }
+    if (!v) return go();
+    if (!v.getAttribute('src')){ v.preload = 'auto'; v.src = v.dataset.src; v.load(); }
+    if (v.readyState >= 3) go(); else v.addEventListener('canplay', go, { once: true });
+  }
+  function setRail(id){
+    [].forEach.call(document.querySelectorAll('.index a'), function(a){
+      var on = a.getAttribute('href').slice(1) === id;
+      a.parentNode.classList.toggle('on', on);
+      if (on){ a.setAttribute('aria-current','true'); decode(a.querySelector('.t')); } else a.removeAttribute('aria-current');
+    });
+  }
+  function showChapter(id){
+    if (!COPY[id] || id === chapter) return;
+    chapter = id; setRail(id);
+    scenes.forEach(function(s){ if (s.dataset.chapter === id) showScene(s); });
+    var c = COPY[id];
+    clearTimeout(swapT);
+    hero.classList.add('swapping');
+    swapT = setTimeout(function(){
+      rises[0].textContent = c[0][0]; rises[1].textContent = c[0][1];
+      blurb.textContent = '';
+      c[1].forEach(function(line, i){ if (i) blurb.appendChild(document.createElement('br')); blurb.appendChild(document.createTextNode(line)); });
+      void hero.offsetWidth;
+      hero.classList.remove('swapping');
+    }, RM ? 0 : 500);
+  }
+  [].forEach.call(document.querySelectorAll('.index a, [data-go]'), function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      showChapter(a.dataset.go || a.getAttribute('href').slice(1));
+    });
+  });
+  document.querySelector('.next').addEventListener('click', function(){
+    showChapter(ORDER[(ORDER.indexOf(chapter) + 1) % ORDER.length]);
+  });
+  addEventListener('keydown', function(e){
+    if (e.target.closest && e.target.closest('input,textarea')) return;
+    var i = ORDER.indexOf(chapter);
+    if (e.key === 'ArrowDown' || e.key === 'PageDown') showChapter(ORDER[Math.min(ORDER.length - 1, i + 1)]);
+    if (e.key === 'ArrowUp' || e.key === 'PageUp') showChapter(ORDER[Math.max(0, i - 1)]);
+  });
+  /* one wheel or swipe gesture moves one chapter */
+  var wheelLock = 0;
+  addEventListener('wheel', function(e){
+    var now = Date.now(); if (now < wheelLock || Math.abs(e.deltaY) < 12) return;
+    wheelLock = now + 900;
+    var i = ORDER.indexOf(chapter);
+    showChapter(ORDER[e.deltaY > 0 ? Math.min(ORDER.length - 1, i + 1) : Math.max(0, i - 1)]);
+  }, {passive:true});
+  var y0 = null;
+  addEventListener('touchstart', function(e){ y0 = e.touches[0].clientY; }, {passive:true});
+  addEventListener('touchend', function(e){
+    if (y0 === null) return; var d = y0 - e.changedTouches[0].clientY; y0 = null;
+    if (Math.abs(d) < 50) return;
+    var i = ORDER.indexOf(chapter);
+    showChapter(ORDER[d > 0 ? Math.min(ORDER.length - 1, i + 1) : Math.max(0, i - 1)]);
+  }, {passive:true});
 
-      <h3>٤. مزوّدو الخدمة</h3>
-      <p>نستعين بمزوّدين موثوقين لتشغيل الخدمة فقط، ولا يحق لهم استخدام البيانات لأي غرض آخر:</p>
-      <ul>
-        <li><b>Supabase:</b> قاعدة البيانات وتخزين الملفات وتسجيل الدخول.</li>
-        <li><b>مزوّد رسائل SMS:</b> لإرسال رموز التحقق إلى رقم جوالك.</li>
-        <li><b>مزوّد بريد إلكتروني:</b> لإرسال الدعوات ورسائل التحقق.</li>
-        <li><b>Apple و Google:</b> عند اختيارك الدخول بحسابهما فقط؛ نستلم منهما بريدك واسمك (إن سمحت بذلك).</li>
-      </ul>
+  /* 4. MENU — the same nav set becomes a panel at 830px and below */
+  var menu = document.querySelector('.menu'), navset = document.getElementById('navset'), menuLabel = menu.querySelector('.t'), root = document.documentElement;
+  function setMenu(open){
+    root.classList.toggle('nav-open', open);
+    menu.setAttribute('aria-expanded', String(open));
+    menuLabel.dataset.text = open ? 'إغلاق' : 'القائمة';
+    decode(menuLabel);
+    if (open) requestAnimationFrame(function(){ var f = navset.querySelector('a'); if (f) try { f.focus(); } catch(err){} });
+  }
+  menu.addEventListener('click', function(e){ e.stopPropagation(); setMenu(!root.classList.contains('nav-open')); });
+  navset.addEventListener('click', function(e){ if (e.target.closest('a')) setMenu(false); });
+  document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && root.classList.contains('nav-open')){ setMenu(false); menu.focus(); } });
+  document.addEventListener('click', function(e){ if (root.classList.contains('nav-open') && !navset.contains(e.target) && e.target !== menu) setMenu(false); });
+  addEventListener('resize', function(){ if (innerWidth > 830 && root.classList.contains('nav-open')) setMenu(false); });
 
-      <h3>٥. التخزين والحماية</h3>
-      <p>تُنقل البيانات مشفّرة (HTTPS)، وتُخزّن مشفّرة لدى مزوّد الخدمة. الوصول محكوم بصلاحيات دقيقة لكل حضانة ودور، ويُحتفظ بسجل لتعديلات الدفعات لحماية الأسر والحضانة.</p>
-
-      <h3>٦. مدة الاحتفاظ والحذف</h3>
-      <ul>
-        <li>تحتفظ الحضانة بالبيانات طوال مدة استخدامها للخدمة.</li>
-        <li>تقدر تحذف حسابك في أي وقت من التطبيق: المزيد ← الحساب ← حذف الحساب. يُحذف حسابك وبياناتك الشخصية فورًا، وتبقى المنشورات والرسائل السابقة لدى الحضانة باسم «حساب محذوف».</li>
-        <li>لحذف بيانات طفل كاملة تواصل مع حضانتك أو معنا، وننفّذ الطلب خلال ٣٠ يومًا.</li>
-      </ul>
-
-      <h3>٧. حقوقك</h3>
-      <p>لك حق الاطلاع على بياناتك وتصحيحها وطلب حذفها أو الحصول على نسخة منها. عدّل بياناتك من داخل التطبيق، أو راسلنا لأي طلب آخر.</p>
-
-      <h3>٨. الأطفال</h3>
-      <p>التطبيق موجّه للبالغين (أولياء الأمور وطاقم الحضانة). الأطفال لا يستخدمون التطبيق ولا ينشئون حسابات، وبياناتهم يضيفها أولياؤهم أو حضانتهم فقط.</p>
-
-      <h3>٩. التغييرات على السياسة</h3>
-      <p>قد نحدّث هذه السياسة، ونوضّح تاريخ آخر تحديث أعلاه. عند أي تغيير جوهري نبلغك داخل التطبيق.</p>
-
-      <h3>١٠. التواصل</h3>
-      <p>لأي سؤال عن الخصوصية: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-    </section>
-
-    <section id="terms">
-      <h2>شروط الاستخدام</h2>
-      <p class="muted">آخر تحديث: ٢٦ سبتمبر ٢٠٢٦</p>
-      <ul>
-        <li><b>الخدمة:</b> نبتة مساحة خاصة بين الحضانة وأسر أطفالها. باستخدامك التطبيق توافق على هذه الشروط وعلى سياسة الخصوصية.</li>
-        <li><b>الحساب:</b> أنت مسؤول عن الحفاظ على جوالك وحسابك، وعن صحة البيانات التي تضيفها.</li>
-        <li><b>احترام الخصوصية:</b> توافق على احترام خصوصية الأطفال والأسر والطاقم، وعدم مشاركة صور الأطفال أو بياناتهم خارج التطبيق دون إذن أسرهم.</li>
-        <li><b>لا تسامح مع المحتوى المسيء:</b> يُمنع نشر أي محتوى مسيء أو غير لائق أو مزعج، أو أي إساءة أو تنمّر أو تحرّش.</li>
-        <li><b>البلاغات والحظر:</b> تقدر تبلّغ عن أي تعليق أو رسالة أو منشور بالضغط المطوّل عليه واختيار «إبلاغ»، أو تحظر كاتبه. تراجع إدارة الحضانة البلاغات وتحذف المحتوى المخالف وتزيل أصحابه خلال ٢٤ ساعة.</li>
-        <li><b>مسؤولية الحضانة:</b> الحضانة مسؤولة عن قبول الأعضاء وعن المحتوى الذي ينشره طاقمها وعن بيانات الرسوم التي تسجّلها، ولها إزالة أي عضو يخالف هذه الشروط.</li>
-        <li><b>الرسوم:</b> ما يظهر في قسم الرسوم سجل تُدخله الحضانة للمتابعة فقط؛ الدفع يتم مباشرة بين الأسرة والحضانة خارج التطبيق.</li>
-        <li><b>التوفر:</b> التطبيق مقدّم «كما هو»، ونعمل على توفره وحماية بياناته قدر الإمكان، وقد نحدّث المزايا أو نوقفها مع إشعار مسبق.</li>
-        <li><b>إنهاء الاستخدام:</b> تقدر تحذف حسابك في أي وقت، ولنا إيقاف أي حساب يخالف هذه الشروط.</li>
-      </ul>
-    </section>
-
-    <section id="support">
-      <h2>الدعم</h2>
-      <ul>
-        <li><b>كيف أدخل؟</b> حمّل التطبيق واختر «الدخول برقم الجوال»، واكتب الرقم المسجّل عند الحضانة، ثم الرمز الذي يصلك برسالة. تدخل مباشرة إلى فصلك أو أطفالك.</li>
-        <li><b>رقمي غير مسجّل:</b> تواصل مع إدارة الحضانة لتضيف رقمك، أو اختر «عندي رمز دعوة» واكتب الرمز الذي وصلك.</li>
-        <li><b>طلبي بانتظار الموافقة:</b> إذا انضممت برمز الفصل وبياناتك غير مسجّلة عند الحضانة، تراجع المعلمة أو الإدارة طلبك وتوافق عليه.</li>
-        <li><b>ما وصلني الرمز:</b> تأكد من الرقم، وانتظر دقيقة ثم اضغط «إعادة الإرسال».</li>
-        <li><b>تغيير اللغة:</b> من المزيد ← اللغة، اختر العربية أو English.</li>
-        <li><b>للحضانات:</b> من «إدارة الحضانة» تقدر تستورد الأطفال من Excel، وتسجّل المعلمات بأرقام جوالاتهن، وتدير الرسوم والدفعات.</li>
-      </ul>
-      <p>راسلنا: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-    </section>
-  </div>
-
-  <!-- ============================== English ============================== -->
-  <div class="doc" lang="en" dir="ltr">
-    <header><span>🌱</span><h1>Nabta</h1></header>
-    <p>An app that connects nurseries with families: the child's day, attendance, moments, events, announcements, fees and messages.</p>
-    <nav><a href="#privacy-en">Privacy Policy</a><a href="#terms-en">Terms of Use</a><a href="#support-en">Support</a></nav>
-
-    <section id="privacy-en">
-      <h2>Privacy Policy</h2>
-      <p class="muted">Last updated: 26 September 2026</p>
-      <p>Nurseries use Nabta to share children's days with their families. The nursery owns the data and decides who joins; we operate the app on its behalf. This policy explains what we collect, how we use and protect it, and your rights.</p>
-
-      <h3>1. Data we collect</h3>
-      <ul>
-        <li><b>Account data:</b> your mobile number (when you sign in with an SMS code), or your email address (when you sign in with email, Apple or Google), and the name you appear with inside the nursery. For email sign-in, your password is stored hashed and is never visible to us.</li>
-        <li><b>Child data:</b> name and class; attendance, check-in/out, daily updates (meals, naps, activities) and growth reports recorded by the nursery; and health notes, date of birth, emergency contact and authorised pickup people added by the family.</li>
-        <li><b>Content:</b> photos, videos, announcements and attached PDF files posted by nursery staff, plus messages, comments, likes and event responses.</li>
-        <li><b>Fee records:</b> amounts owed per child, recorded payments and receipt numbers, as entered by the nursery's administration. We do not collect card or bank details, and no payment is processed inside the app.</li>
-        <li><b>Bulk enrolment data:</b> when a nursery imports its roster or registers staff by mobile number, guardians' and teachers' contact details (mobile or email) are stored so each person is linked to their class or children automatically when they sign in.</li>
-        <li><b>Limited technical data:</b> operational logs needed for security and reliability (such as request time and error type). We use no advertising trackers and do not collect your location.</li>
-      </ul>
-
-      <h3>2. How we use data</h3>
-      <ul>
-        <li>Only to run the app: showing you your child's day, letting the nursery communicate with you, and sending sign-in codes, invitations and notifications.</li>
-        <li>We do not sell data, use it for advertising or tracking, or share it with anyone for marketing.</li>
-      </ul>
-
-      <h3>3. Who sees what</h3>
-      <ul>
-        <li>Parents see only their own children, teachers only the children in their classes, and each nursery's administration only its own nursery.</li>
-        <li>Photos, videos and files are visible only to the class's families (or to the nursery's members when posted school-wide) and are served through expiring links.</li>
-        <li>Fee records are visible to the nursery's administration, and each parent sees only their own children's fees.</li>
-        <li>These rules are enforced in the database itself, not only in the app.</li>
-      </ul>
-
-      <h3>4. Service providers</h3>
-      <p>We rely on trusted providers solely to run the service; they may not use the data for any other purpose:</p>
-      <ul>
-        <li><b>Supabase:</b> database, file storage and authentication.</li>
-        <li><b>SMS provider:</b> to deliver verification codes to your mobile number.</li>
-        <li><b>Email provider:</b> to deliver invitations and verification emails.</li>
-        <li><b>Apple and Google:</b> only if you choose to sign in with them; we receive your email and name (if you allow it).</li>
-      </ul>
-
-      <h3>5. Storage and security</h3>
-      <p>Data is encrypted in transit (HTTPS) and at rest with our hosting provider. Access is governed by fine-grained permissions per nursery and role, and changes to payment records are logged to protect both families and the nursery.</p>
-
-      <h3>6. Retention and deletion</h3>
-      <ul>
-        <li>The nursery keeps its data for as long as it uses the service.</li>
-        <li>You can delete your account at any time in the app: More → Account → Delete account. Your account and personal data are deleted immediately; earlier posts and messages remain with the nursery under "Deleted account".</li>
-        <li>To delete a child's data entirely, contact your nursery or us; we complete such requests within 30 days.</li>
-      </ul>
-
-      <h3>7. Your rights</h3>
-      <p>You may access, correct, delete or request a copy of your data. Edit your details inside the app, or email us for any other request.</p>
-
-      <h3>8. Children</h3>
-      <p>The app is intended for adults (parents and nursery staff). Children do not use the app or create accounts; their data is added only by their guardians or their nursery.</p>
-
-      <h3>9. Changes to this policy</h3>
-      <p>We may update this policy and will show the date of the latest update above. We will notify you in the app of any material change.</p>
-
-      <h3>10. Contact</h3>
-      <p>For any privacy question: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-    </section>
-
-    <section id="terms-en">
-      <h2>Terms of Use</h2>
-      <p class="muted">Last updated: 26 September 2026</p>
-      <ul>
-        <li><b>The service:</b> Nabta is a private space between a nursery and its children's families. By using the app you agree to these terms and to the Privacy Policy.</li>
-        <li><b>Your account:</b> you are responsible for keeping your phone and account secure and for the accuracy of the information you add.</li>
-        <li><b>Respect for privacy:</b> you agree to respect the privacy of children, families and staff, and not to share children's photos or data outside the app without their families' permission.</li>
-        <li><b>Zero tolerance for objectionable content:</b> posting offensive, inappropriate or harassing content, or any abuse or bullying, is not allowed.</li>
-        <li><b>Reporting and blocking:</b> any comment, message or post can be reported by long-pressing it and choosing "Report", and its author can be blocked. The nursery's administrators review reports and remove offending content and members within 24 hours.</li>
-        <li><b>The nursery's responsibility:</b> the nursery is responsible for admitting members, for content posted by its staff and for the fee records it enters, and may remove any member who breaches these terms.</li>
-        <li><b>Fees:</b> the Fees section is a record entered by the nursery for tracking only; payment happens directly between the family and the nursery, outside the app.</li>
-        <li><b>Availability:</b> the app is provided "as is". We work to keep it available and its data protected, and may change or discontinue features with prior notice.</li>
-        <li><b>Termination:</b> you may delete your account at any time, and we may suspend any account that breaches these terms.</li>
-      </ul>
-    </section>
-
-    <section id="support-en">
-      <h2>Support</h2>
-      <ul>
-        <li><b>How do I sign in?</b> Download the app, choose "Sign in with mobile number", enter the number registered with your nursery, then the code you receive by SMS. You land straight in your class or with your children.</li>
-        <li><b>My number isn't registered:</b> ask your nursery's administration to add it, or choose "I have an invite code" and enter the code you received.</li>
-        <li><b>My request is pending:</b> if you joined with a class code and your details aren't on the nursery's list, the teacher or administration will review and approve your request.</li>
-        <li><b>I didn't get the code:</b> check the number, wait a minute, then tap "Resend".</li>
-        <li><b>Changing the language:</b> go to More → Language and choose العربية or English.</li>
-        <li><b>For nurseries:</b> from "Nursery admin" you can import children from Excel, register teachers by mobile number, and manage fees and payments.</li>
-      </ul>
-      <p>Email us: <a href="mailto:nabtahsupport@gmail.com">nabtahsupport@gmail.com</a></p>
-    </section>
-  </div>
-</main>
+  /* 5. BOOT */
+  function boot(){
+    reserve();
+    if (RM) return;
+    function at(sel, t0, step){ [].slice.call(document.querySelectorAll(sel)).forEach(function(el, i){ setTimeout(function(){ decode(el); }, t0 + i * (step || 0)); }); }
+    at('.enter .t', 330); at('.menu .t', 390); at('.links a .t', 360, 45);
+    at('.index li.on .t', 660); at('.index li:not(.on) .t', 720, 55);
+    at('.cta .t', 900); at('.dock .t', 1000, 60);
+    setTimeout(function(){ document.documentElement.classList.remove('anim'); }, 2200);
+    setTimeout(function(){ labels.forEach(settle); }, 2600);
+  }
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(boot); else addEventListener('load', boot);
+  var rt; addEventListener('resize', function(){ clearTimeout(rt); rt = setTimeout(reserve, 160); });
+})();
+</script>
 </body>
 </html>
