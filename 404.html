@@ -1,0 +1,16 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>نبته</title>
+<script>
+  // Mistyped addresses: anything mentioning the dashboard (any letter case) goes there; the rest go home.
+  var p = location.pathname.toLowerCase();
+  location.replace(p.indexOf("admin") !== -1 || p.indexOf("لوحة") !== -1 ? "/admin/" : "/");
+</script>
+<style>body{margin:0;min-height:100vh;display:grid;place-items:center;background:#F6F1E9;color:#5E5A68;font:16px system-ui,sans-serif}</style>
+</head>
+<body><a href="/" style="color:#3F6A52">الرجوع إلى نبته</a></body>
+</html>
